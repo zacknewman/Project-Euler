@@ -24,17 +24,21 @@ def sum_multiples(i, j, start, end=None):
     >>> sum_multiples(2, 3, 20)
     137
     >>> sum_multiples(2, 5, 7, 101)
-    3050
+    3033
     """
     if end is None:
         return sum_multiples(i, j, 0, start)
     else:
         p = i*j
-        k = end // i
-        m = end // j
-        n = end // p
-        return (i*k*(k + 1) + j*m*(m + 1) - p*n*(n + 1)) // 2
-    
+        a = ceil(start / i)
+        b = end // i
+        c = ceil(start / j)
+        d = end // j
+        e = ceil(start / p)
+        f = end // p
+        return (i*(b + a)*(b - a + 1) + j*(d + c)*(d - c + 1) -
+        p*(f + e)*(f - e + 1)) // 2
+
 def even_fib(n):
     """Generate all even Fibonacci numbers > 0 and <= n.
         

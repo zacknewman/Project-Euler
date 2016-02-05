@@ -1,4 +1,4 @@
-from math import log
+from math import log, ceil
 
 def product(iterable):
     """Return the product of every element in an iterable.
@@ -11,34 +11,47 @@ def product(iterable):
         j *= i
     return j
 
-def sum_multiples(i, j, start, end=None):
-    """Return the sum of all multiples of i and j from start to end.
+def sum_consec_numbers(start, end=None, step = 1):
+    """Return the sum of the integers between start and end.
     
-    If only three arguments, i, j, n are entered; then it defaults to
-    calculating the sum of all multiples of i and j from 0 to n.
+    The step parameter is defaulted at 1, but it can be changed.
+    This function is a much faster calculation than the equivalent
+    sum(range(start, end + 1, 1)) function.
     
-    This function is a much faster calculation than an equivalent loop
-    or (sum(range(start, end, i)) + sum(range(start, end, j)) - 
-    sum(range(start, end, i*j))) function.
+    If only one argument, n, is entered; then it defaults to
+    calculating the sum of the consecutive integers from 0 to n >= 0.
+    The function should only be used for integers where start <= end
+    and step > 0.
     
-    >>> sum_multiples(2, 3, 20)
-    137
-    >>> sum_multiples(2, 5, 7, 101)
-    3033
+    >>> sum_consec_numbers(10)
+    55
+    >>> sum_consec_numbers(2, 11, 2)
+    30
     """
     if end is None:
-        return sum_multiples(i, j, 0, start)
+        return sum_consec_numbers(0, start, 1)
     else:
-        p = i*j
-        a = ceil(start / i)
-        b = end // i
-        c = ceil(start / j)
-        d = end // j
-        e = ceil(start / p)
-        f = end // p
-        return (i*(b + a)*(b - a + 1) + j*(d + c)*(d - c + 1) -
-        p*(f + e)*(f - e + 1)) // 2
+        n = (end - start) // step
+        return ((2*start + n*step)*(n + 1)) // 2
 
+def sum_multiple(i, start, end=None):
+    """Return the sum of all multiples of i between start and end.
+    
+    If only two arguments, i and n, are entered; then it defaults to
+    calculating the sum of all multiples of i between 0 and n >= 0.
+    The function should only be used for integers where start <= end.
+    
+    >>> sum_multiple(2, 99)
+    2450
+    >>> sum_multiple(2, 7, 99)
+    2438
+    """
+    if end is None:
+        return sum_multiple(i, 0, start)
+    else:
+        start = i*ceil(start / i)
+        return sum_consec_numbers(start, end, i)
+    
 def even_fib(n):
     """Generate all even Fibonacci numbers > 0 and <= n.
         
@@ -166,27 +179,6 @@ def smallest_multiple(n):
         multiples.append(q)
     return product(multiples)
 
-def sum_consec_numbers(start, end=None, step = 1):
-    """Return the sum of the integers between start and end.
-    
-    The step parameter is defaulted at 1, but it can be changed.
-    This function is a much faster calculation than the equivalent
-    sum(range(start, end + 1, 1)) function.
-    
-    If only one argument, n, is entered; then it defaults to calculating
-    the sum of the consecutive integers from 0 to n.
-    
-    >>> sum_consec_numbers(10)
-    55
-    >>> sum_consec_numbers(2, 11, 2)
-    30
-    """
-    if end is None:
-        return sum_consec_numbers(0, start, 1)
-    else:
-        n = (end - start) // step
-        return ((2*start + n*step)*(n + 1)) // 2
-
 def sum_consec_squares(start, end=None, step = 1):
     """Return the sum of squares from start to end.
     
@@ -194,8 +186,10 @@ def sum_consec_squares(start, end=None, step = 1):
     This function is a much faster calculation than an equivalent loop
     or sum(map(lambda x: x**2, range(start, end + 1, 1))) function.
     
-    If only one argument, n, is entered; then it defaults to calculating
-    the sum of squares of the consecutive integers from 0 to n.
+    If only one argument, n, is entered; then it defaults to
+    calculating the sum of squares of the consecutive integers
+    from 0 to n >= 0. The function should only be used for integers
+    where start <= end and step > 0.
     
     >>> sum_consec_squares(10)
     385

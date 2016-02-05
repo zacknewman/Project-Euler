@@ -65,7 +65,7 @@ def fib_div(i, n):
             yield a
 
 def sum_fib_div(i, n):
-    """Return the sum of all even Fibonacci numbers <= n.
+    """Return the sum of all Fibonacci numbers <= n and divisible by i.
     
     >>> sum_fib_div(2, 10)
     10

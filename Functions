@@ -52,25 +52,25 @@ def sum_multiple(i, start, end=None):
         start = i*ceil(start / i)
         return sum_consec_numbers(start, end, i)
     
-def even_fib(n):
-    """Generate all even Fibonacci numbers > 0 and <= n.
+def fib_div(i, n):
+    """Generate all Fibonacci numbers > 0 and <= n and divisible by i.
         
-    >>> list(even_fib(10))
+    >>> list(fib_div(2,10))
     [2, 8]
     """
     a, b = 0, 1
     while b <= n:
         a, b = b, a + b
-        if a % 2 == 0:
+        if a % i == 0:
             yield a
 
-def even_fib_sum(n):
+def sum_fib_div(i, n):
     """Return the sum of all even Fibonacci numbers <= n.
     
-    >>> even_fib_sum(5)
-    2
+    >>> sum_fib_div(2, 10)
+    10
     """
-    return sum(even_fib(n))
+    return sum(fib_div(i, n))
 
 def factorization(n):
     """Return a list of the prime factorization of n.

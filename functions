@@ -1,0 +1,245 @@
+from math import log
+
+def product(iterable):
+    """Return the product of every element in an iterable.
+    
+    >>> product(range(1, 8))
+    5040
+    """
+    j = 1
+    for i in iterable:
+        j *= i
+    return j
+
+def sum_multiples(i, j, start, end=None):
+    """Return the sum of all multiples of i and j from start to end.
+    
+    If only three arguments, i, j, n are entered; then it defaults to
+    calculating the sum of all multiples of i and j from 0 to n.
+    
+    This function is a much faster calculation than an equivalent loop
+    or (sum(range(start, end, i)) + sum(range(start, end, j)) - 
+    sum(range(start, end, i*j))) function.
+    
+    >>> sum_multiples(2, 3, 20)
+    137
+    >>> sum_multiples(2, 5, 7, 101)
+    3050
+    """
+    if end is None:
+        return sum_multiples(i, j, 0, start)
+    else:
+        p = i*j
+        k = end // i
+        m = end // j
+        n = end // p
+        return (i*k*(k + 1) + j*m*(m + 1) - p*n*(n + 1)) // 2
+    
+def even_fib(n):
+    """Generate all even Fibonacci numbers > 0 and <= n.
+        
+    >>> list(even_fib(10))
+    [2, 8]
+    """
+    a, b = 0, 1
+    while b <= n:
+        a, b = b, a + b
+        if a % 2 == 0:
+            yield a
+
+def even_fib_sum(n):
+    """Return the sum of all even Fibonacci numbers <= n.
+    
+    >>> even_fib_sum(5)
+    2
+    """
+    return sum(even_fib(n))
+
+def factorization(n):
+    """Return a list of the prime factorization of n.
+    
+    >>> factorization(24)
+    [2, 2, 2, 3]
+    """
+    primes = []
+    d = 3
+    while n % 2 == 0:
+        primes.append(2)
+        n //= 2
+    while n > 1:
+        while n % d == 0:
+            primes.append(d)
+            n //= d
+        d += 2
+        if (d*d > n) and (n > 1):
+            primes.append(n)
+            break
+    return primes
+
+def palindromic_number(n):
+    """Test if n is a palindromic number.
+    
+    >>> palindromic_number(1001)
+    True
+    >>> palindromic_number(1212)
+    False
+    """
+    w = str(n)
+    if w == w[::-1]:
+        return True
+    else:
+        return False
+
+def palindrome_product(digits):
+    """Return a tuple containing a palindromic product of two numbers.
+    
+    The parameter, digits, is the number of digits the two numbers that
+    will be multiplied have. The product of these two numbers is the
+    largest possible palindromic number that's a result of multiplying
+    any two numbers with that many digits.
+    
+    >>> palindrome_product(2)
+    (99, 91, 9009)
+    """
+    n = int(10**d - 1)
+    m = int(10**(d - 1) - 1)
+    l = 0
+    prod = ()
+    for i in range(n, m, -1):
+        for j in range(n, m, -1):
+            k = i * j
+            if palindromic_number(k) and k > l:
+                l = k
+                prod = (i, j, l)
+            else:
+                continue
+    return prod
+
+def prime(n):
+    """Test if n is a prime number.
+        
+    >>> prime(19)
+    True
+    """
+    if n <= 1:
+        return False
+    elif n == 2:
+        return True
+    elif n % 2 == 0:
+        return False
+    else:
+        j = int(n**0.5) + 1
+        for i in range(3, j, 2):
+            if n % i == 0:
+                return False
+        else:
+            return True
+
+def prime_generator(n):
+    """Generate all primes <= n.
+    
+    >>> list(prime_generator(10))
+    [2, 3, 5, 7]
+    """
+    if n <= 1:
+        pass
+    else:
+        yield 2
+        for i in range(3, n + 1, 2):
+            if prime(i):
+                yield i
+
+def smallest_multiple(n):
+    """Return the smallest multiple of all numbers from 1 to n.
+    
+    >>> smallest_multiple(10)
+    2520
+    """
+    primes = prime_generator(n)
+    multiples = []
+    for p in primes:
+        q = int(p**(log(n) // log(p)))
+        multiples.append(q)
+    return product(multiples)
+
+def sum_consec_numbers(start, end=None, step = 1):
+    """Return the sum of the integers between start and end.
+    
+    The step parameter is defaulted at 1, but it can be changed.
+    This function is a much faster calculation than the equivalent
+    sum(range(start, end + 1, 1)) function.
+    
+    If only one argument, n, is entered; then it defaults to calculating
+    the sum of the consecutive integers from 0 to n.
+    
+    >>> sum_consec_numbers(10)
+    55
+    >>> sum_consec_numbers(2, 11, 2)
+    30
+    """
+    if end is None:
+        return sum_consec_numbers(0, start, 1)
+    else:
+        n = (end - start) // step
+        return ((2*start + n*step)*(n + 1)) // 2
+
+def sum_consec_squares(start, end=None, step = 1):
+    """Return the sum of squares from start to end.
+    
+    The step parameter is defaulted at 1, but it can be changed.
+    This function is a much faster calculation than an equivalent loop
+    or sum(map(lambda x: x**2, range(start, end + 1, 1))) function.
+    
+    If only one argument, n, is entered; then it defaults to calculating
+    the sum of squares of the consecutive integers from 0 to n.
+    
+    >>> sum_consec_squares(10)
+    385
+    >>> sum_consec_squares(2, 21, 2)
+    1540
+    """
+    if end is None:
+        return sum_consec_squares(0, start, 1)
+    else:
+        n = (end - start) // step
+        return ((n + 1)*(n*step*(6*start + step*(2*n + 1)) + 6*(start**2))) // 6
+
+def prime_number(n):
+    """Return the nth prime number (indexed from 0).
+    
+    >>> prime_number(3)
+    7
+    """
+    if n == 0:
+        return 2
+    else:
+        p = 3
+        j = 0
+        while j < n:
+            if prime(p):
+                j += 1
+            p += 2
+        return p - 2
+
+def digit_product(n, m):
+    """Return the largest product of m consecutive digits in n.
+    
+    A tuple containing the m digits as well as its product is returned.
+    
+    >>> digit_product(12345, 2)
+    (4, 5, 20)
+    """
+    w = list(str(n))
+    digits = []
+    p = 0
+    l = len(w)
+    for i in w:
+        digits.append(int(i))
+    for j in range(l - m + 1):
+        d = digits[j : j + m]
+        k = product(d)
+        if k > p:
+            p = k
+            d.append(p)
+            answer = tuple(d)
+    return answer

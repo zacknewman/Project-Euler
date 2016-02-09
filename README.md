@@ -1,5 +1,5 @@
 # Project-Euler
-My solutions to some of the problems on Project Euler (Python and Haskell).
+My solutions to some of the problems on Project Euler.
 All of my solutions are done in Python, and many are also done in Haskell.
 Most of the functions used to solve the problems on Project Euler are
 generalized.

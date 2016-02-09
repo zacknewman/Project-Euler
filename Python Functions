@@ -66,7 +66,7 @@ def fib_div(i, n):
 
 def sum_fib_div(i, n):
     """Return the sum of all Fibonacci numbers <= n and divisible by i.
-    
+        
     >>> sum_fib_div(2, 10)
     10
     """
@@ -75,7 +75,11 @@ def sum_fib_div(i, n):
 def factorization(n):
     """Return a list of the prime factorization of n.
     
-    This function is a rather simple implementation
+    This function is a rather simple implementation that can be
+    greatly improved (e.g., general number field sieve); consequently
+    this function may take a long time to compute if the number exceeds 20 digits. In the case of very large integers one must employ sieve theory
+    techniques.
+    
     >>> factorization(24)
     [2, 2, 2, 3]
     """
@@ -119,8 +123,8 @@ def palindrome_product(digits):
     >>> palindrome_product(2)
     (99, 91, 9009)
     """
-    n = int(10**d - 1)
-    m = int(10**(d - 1) - 1)
+    n = int(10**digits - 1)
+    m = int(10**(digits - 1) - 1)
     l = 0
     prod = ()
     for i in range(n, m, -1):
@@ -150,7 +154,7 @@ def composite(n):
     if n <= 2:
         return None
     else:
-        for i in prime_generator(n):
+        for i in range(2, n, 1):
             if n % i != 0:
                 break
         if i**(n - 1) % n != 1:
@@ -164,8 +168,9 @@ def prime(n):
     This is a very simple function that first tests if a number
     is composite using the "composite" function, then loops through
     integers to test if they divide n. Consequently this function
-    shouldn't be used if the number exceeds 20 digits. In the case
-    for very large integers one must employ sieve theory techniques.
+    may take a long time to compute if the number exceeds 20 digits.
+    In the case of very large integers one must employ sieve theory
+    techniques.
     
     >>> prime(19)
     True
@@ -237,6 +242,10 @@ def sum_consec_squares(start, end=None, step = 1):
 
 def prime_number(n):
     """Return the nth prime number (indexed from 0).
+    
+    The function returns the nth prime integer (indexed from 0).
+    The function takes some time to run, so integers larger than 15000
+    shouldn't be used.
     
     >>> prime_number(3)
     7

@@ -75,6 +75,7 @@ def sum_fib_div(i, n):
 def factorization(n):
     """Return a list of the prime factorization of n.
     
+    This function is a rather simple implementation
     >>> factorization(24)
     [2, 2, 2, 3]
     """
@@ -132,25 +133,57 @@ def palindrome_product(digits):
                 continue
     return prod
 
+def composite(n):
+    """Test if n is a composite number.
+    
+    The function employs Fermat's Little Theorem which works
+    for all non-Carmichael composite numbers. There are much more
+    advanced number-theoretic techniques that can be used to improve
+    the performance. The function outputs None for numbers less than 2,
+    prime numbers, and Carmichael composite numbers; therefore only
+    True outputs should be considered.
+    
+    >>> composite(10)
+    True
+    >>> composite(3*11*17)
+    """
+    if n <= 2:
+        return None
+    else:
+        for i in prime_generator(n):
+            if n % i != 0:
+                break
+        if i**(n - 1) % n != 1:
+            return True
+        else:
+            return None
+
 def prime(n):
     """Test if n is a prime number.
-        
+    
+    This is a very simple function that first tests if a number
+    is composite using the "composite" function, then loops through
+    integers to test if they divide n. Consequently this function
+    shouldn't be used if the number exceeds 20 digits. In the case
+    for very large integers one must employ sieve theory techniques.
+    
     >>> prime(19)
     True
     """
-    if n <= 1:
-        return False
-    elif n == 2:
-        return True
-    elif n % 2 == 0:
+    if composite(n):
         return False
     else:
-        j = int(n**0.5) + 1
-        for i in range(3, j, 2):
-            if n % i == 0:
-                return False
-        else:
+        if n <= 1:
+            return False
+        elif n == 2:
             return True
+        else:
+            j = int(n**0.5) + 1
+            for i in range(3, j, 2):
+                if n % i == 0:
+                    return False
+            else:
+                return True
 
 def prime_generator(n):
     """Generate all primes <= n.

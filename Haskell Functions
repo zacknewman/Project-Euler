@@ -1,0 +1,77 @@
+--Sums consecutive integers from i to n separated by a constant j
+sumConsecNumbers      :: Integer -> Integer -> Integer -> Integer
+sumConsecNumbers i n j = (2 * i + m * j) * (m + 1) `div` 2
+    where m = (n - i) `div` j
+
+--Sums all multiples of i between m and n
+sumMultiple      :: Integer -> Integer -> Integer -> Integer
+sumMultiple i m n = sumConsecNumbers j n i
+    where j = i * (ceiling ((fromIntegral m::Double) /
+              (fromIntegral i::Double))::Integer)
+
+--Infinite list of Fibonacci numbers
+fibAll :: [Integer]
+fibAll  = 0:1:zipWith (+) fibAll (tail fibAll)
+
+--Returns the list of Fibonacci numbers <= n and divisible by i
+fibDiv    :: Integer -> Integer -> [Integer]
+fibDiv i n = [k | k <- takeWhile (<= n) fibAll, k `mod` i == 0]
+
+--Returns the prime factorization of n > 1
+factorization  :: Integer -> [Integer]
+factorization 1 = []
+factorization n = p:factorization (n `div` p)
+        where p = head $ filter (\ x -> n `mod` x == 0) (2:[3,5..round $ sqrt
+                  (fromIntegral n::Double)]++[n])
+
+--Converts a non-negative integer into a list of the integer's digit(s)
+toDigits       :: Integer -> [Integer]
+toDigits n
+    | n < 1     = error "Argument must be a non-negative integer."
+    | n > 9     = toDigits (n `div` 10) ++ [n `mod` 10]
+    | otherwise = [n]
+
+--Test if a number n is a palindromic number
+palindromicNumber  :: Integer -> Bool
+palindromicNumber n = toDigits n == reverse (toDigits n)
+
+--Returns the largest palindromic number that is a product of two n-digit
+--numbers
+palindromeProduct :: Integer -> Integer
+palindromeProduct n = maximum (filter palindromicNumber xs)
+    where xs = [i * j | i <- [10 ^ (n - 1)..10 ^ n - 1], j <- [10 ^ (n - 1)..10
+                ^ n - 1]]
+
+--Outputs true or false depending if n is prime
+prime  :: Integer -> Bool
+prime n = [n] == factorization n
+
+--List of all primes
+allPrimes :: [Integer]
+allPrimes  = filter prime (2:[3,5..])
+
+--Returns the smallest number that is a multiple of every number from 1 to n
+smallestMultiple  :: Int -> Integer
+smallestMultiple n = foldl f 1 (take n allPrimes)
+    where f = \ q p -> p ^ (floor $ log (fromIntegral n::Double) / log
+              (fromIntegral p::Double)::Integer) * q
+
+--Sums consecutive squares from i to n separated by a constant j
+sumConsecSquares      :: Integer -> Integer -> Integer -> Integer
+sumConsecSquares i n j = ((m + 1) * (m * j * (6 * i + j * (2 * m + 1)) + 6 *
+                         toInteger i ^ (2::Integer))) `div` 6
+    where m = (n - i) `div` j
+
+--Returns the nth prime number (indexed from 0)
+primeNumber  :: Integer -> Integer
+primeNumber n = last $ zipWith (\ a b -> a + b - a) [0..n] allPrimes
+
+main :: IO()
+main  = do print (sumMultiple 3 1 999 + sumMultiple 5 1 999 - sumMultiple 15 1
+                  999)
+           print (sum $ fibDiv 2 4000000)
+           print (last $ factorization 600851475143)
+           print (palindromeProduct 3)
+           print (smallestMultiple 20)
+           print (sumConsecNumbers 1 100 1 ^ (2::Integer) - sumConsecSquares 1 100 1)
+           print (primeNumber 10000)

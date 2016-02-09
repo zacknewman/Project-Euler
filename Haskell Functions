@@ -81,7 +81,7 @@ smallestMultiple n = foldl f 1 $ take n allPrimes
 -- a constant integer bounded by two integers.
 sumConsecSquares      :: Integer -> Integer -> Integer -> Integer
 sumConsecSquares i n j = ((m + 1) * (m * j * (6 * i + j * (2 * m + 1)) + 6 *
-                         toInteger i ^ (2::Integer))) `div` 6
+                          i ^ (2::Integer))) `div` 6
     where m = (n - i) `div` j
 
 -- |The primeNumber function returns the nth prime integer (indexed from 0).

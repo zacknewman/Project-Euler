@@ -32,7 +32,7 @@ fibAll  = 0:1:zipWith (+) fibAll (tail fibAll)
 -- |The fibDiv function creates the list of Fibonacci integers bounded by an
 -- integer and divisible by another integer.
 fibDiv    :: Integer -> Integer -> [Integer]
-fibDiv i n = [k | k <- takeWhile (<= n) fibAll, k `mod` i == 0]
+fibDiv i n = filter (\ k -> k `mod` i == 0) $ takeWhile (<= n) fibAll
 
 -- |The factorization function creates a list of the prime factorization of any
 -- positive integer.
@@ -58,7 +58,7 @@ palindromicNumber n = toDigits n == reverse (toDigits n)
 -- |The palindromeProduct produces the largest palindromic integer that is a
 -- product of two non-negative n-digit integers.
 palindromeProduct :: Integer -> Integer
-palindromeProduct n = maximum (filter palindromicNumber xs)
+palindromeProduct n = maximum $ filter palindromicNumber xs
     where xs = [i * j | i <- [10 ^ (n - 1)..10 ^ n - 1], j <- [10 ^ (n - 1)..10
                 ^ n - 1]]
 
@@ -73,7 +73,7 @@ allPrimes  = filter prime (2:[3,5..])
 -- |The smallestMultiple function produces the smallest integer that is a
 -- multiple of every integer from 1 to n.
 smallestMultiple  :: Int -> Integer
-smallestMultiple n = foldl f 1 (take n allPrimes)
+smallestMultiple n = foldl f 1 $ take n allPrimes
     where f = \ q p -> p ^ (floor $ log (fromIntegral n::Double) / log
               (fromIntegral p::Double)::Integer) * q
 

@@ -40,7 +40,7 @@ factorization  :: Integer -> [Integer]
 factorization 1 = []
 factorization n = p:factorization (n `div` p)
         where p = head $ filter (\ x -> n `mod` x == 0) (2:[3,5..round $ sqrt
-                  (fromIntegral n::Double)]++[n])
+                  (fromIntegral n::Double)] ++ [n])
 
 -- |The toDigits function maps a non-negative integer into a list of the
 -- integer's digit(s).

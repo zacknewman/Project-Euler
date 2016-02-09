@@ -35,7 +35,9 @@ fibDiv    :: Integer -> Integer -> [Integer]
 fibDiv i n = filter (\ k -> k `mod` i == 0) $ takeWhile (<= n) fibAll
 
 -- |The factorization function creates a list of the prime factorization of any
--- positive integer.
+-- positive integer. This function is a rather simple implementation that can be
+-- greatly improved (e.g., general number field sieve), and so should only be
+-- used for integers up to 20-digits in length.
 factorization  :: Integer -> [Integer]
 factorization 1 = []
 factorization n = p:factorization (n `div` p)
@@ -62,9 +64,25 @@ palindromeProduct n = maximum $ filter palindromicNumber xs
     where xs = [i * j | i <- [10 ^ (n - 1)..10 ^ n - 1], j <- [10 ^ (n - 1)..10
                 ^ n - 1]]
 
--- |The prime function tests if an integer is prime.
+-- |The composite function tests if an integer is composite. The function
+-- employs Fermat's Little Theorem which works for all non-Carmichael composite
+-- numbers. There are much more advanced number-theoretic techniques that can be
+-- used to improve the performance. The function outputs False for numbers less
+-- than 2, prime numbers, and Carmichael composite numbers; therefore only True
+-- outputs should be considered.
+composite  :: Integer -> Bool
+composite n
+    | n <= 2    = False
+    | otherwise = head (filter (\ p -> n `mod` p /= 0) (2:[3,5..])) ^ (n - 1)
+                  `mod` n /= 1
+
+-- |The prime function tests if an integer is prime. This is a very simple
+-- function that first tests if a number is composite using the "composite"
+-- function, then factorizes the number to test its primality. Consequently this
+-- function may take a lot of time to compute if the number exceeds 20 digits.
+-- In the case of very large integers one must employ sieve theory techniques.
 prime  :: Integer -> Bool
-prime n = [n] == factorization n
+prime n = if composite n then False else factorization n == [n]
 
 -- |The allPrimes function produces the list of all primes.
 allPrimes :: [Integer]
@@ -85,8 +103,10 @@ sumConsecSquares i n j = ((m + 1) * (m * j * (6 * i + j * (2 * m + 1)) + 6 *
     where m = (n - i) `div` j
 
 -- |The primeNumber function returns the nth prime integer (indexed from 0).
+-- The function takes some time to run integers larger than 15000 shouldn't
+-- be used.
 primeNumber  :: Integer -> Integer
-primeNumber n = last $ zipWith (\ a b -> a + b - a) [0..n] allPrimes
+primeNumber n = allPrimes !! fromInteger n
 
 main :: IO()
 main  = do print (sumMultiple 3 1 999 + sumMultiple 5 1 999 - sumMultiple 15 1

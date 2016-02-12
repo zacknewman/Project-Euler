@@ -11,28 +11,32 @@ def product(iterable):
         j *= i
     return j
 
-def sum_consec_numbers(start, end=None, step = 1):
-    """Return the sum of the integers between start and end.
+def sum_consec_numbers(start, quantity=None, step=1):
+    """Return the sum of quantity-number of squares from start.
     
-    The step parameter is defaulted at 1, but it can be changed.
-    This function is a much faster calculation than the equivalent
-    sum(range(start, end + 1, 1)) function.
+    The step parameter is defaulted at 1; and if only one positive
+    integer argument is entered, then it defaults to calculating the
+    sum of the integers 0 to (quantity - 1).
     
-    If only one argument, n, is entered; then it defaults to
-    calculating the sum of the consecutive integers from 0 to n >= 0.
-    The function should only be used for integers where start <= end
-    and step > 0.
+    The only parameter that requires a positive integer is quantity.
+    The function works for all complex numbers for the start and step
+    parameters. If non-integer values are used for start and step, then
+    the function returns the sum of start, start + step,
+    start + 2*step,..., start + (quantity - 1)*step.
     
     >>> sum_consec_numbers(10)
-    55
-    >>> sum_consec_numbers(2, 11, 2)
-    30
+    45.0
+    >>> sum_consec_numbers(2, 21, 2)
+    462.0
+    >>> sum_consec_numbers(complex(cmath.e, cmath.pi), 5,
+    complex(cmath.sqrt(2), cmath.pi**2))
+    (27.733544766026178+114.40400727884256j)
     """
-    if end is None:
+    if quantity is None:
         return sum_consec_numbers(0, start, 1)
     else:
-        n = (end - start) // step
-        return ((2*start + n*step)*(n + 1)) // 2
+        n = quantity - 1
+        return (n + 1)*start + ((n**2 + n)*step)/2
 
 def sum_multiple(i, start, end=None):
     """Return the sum of all multiples of i between start and end.
@@ -217,28 +221,33 @@ def smallest_multiple(n):
         multiples.append(q)
     return product(multiples)
 
-def sum_consec_squares(start, end=None, step = 1):
-    """Return the sum of squares from start to end.
+def sum_consec_squares(start, quantity=None, step=1):
+    """Return the sum of quantity-number of squares from start.
     
-    The step parameter is defaulted at 1, but it can be changed.
-    This function is a much faster calculation than an equivalent loop
-    or sum(map(lambda x: x**2, range(start, end + 1, 1))) function.
+    The step parameter is defaulted at 1; and if only one positive
+    integer argument is entered, then it defaults to calculating the
+    sum of squares of the integers 0 to (quantity - 1).
     
-    If only one argument, n, is entered; then it defaults to
-    calculating the sum of squares of the consecutive integers
-    from 0 to n >= 0. The function should only be used for integers
-    where start <= end and step > 0.
+    The only parameter that requires a positive integer is quantity.
+    The function works for all complex numbers for the start and step
+    parameters. If non-integer values are used for start and step, then
+    the function returns the sum of squares of start, start + step,
+    start + 2*step,..., start + (quantity - 1)*step.
     
     >>> sum_consec_squares(10)
-    385
+    285.0
     >>> sum_consec_squares(2, 21, 2)
-    1540
+    13244.0
+    >>> sum_consec_squares(complex(cmath.e, cmath.pi), 5,
+    complex(cmath.sqrt(2), cmath.pi**2))
+    (-3417.9163855736806+1548.286030897781j)
     """
-    if end is None:
+    if quantity is None:
         return sum_consec_squares(0, start, 1)
     else:
-        n = (end - start) // step
-        return ((n + 1)*(n*step*(6*start + step*(2*n + 1)) + 6*(start**2))) // 6
+        n = quantity - 1
+        return ((n + 1)*start**2 + (n**2 + n)*start*step + ((2*n**3 + 3*n**2 +
+                n)*step**2)/6)
 
 def prime_number(n):
     """Return the nth prime number (indexed from 0).

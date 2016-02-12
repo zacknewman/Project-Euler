@@ -38,23 +38,23 @@ def sum_consec_numbers(start, quantity=None, step=1):
         n = quantity - 1
         return (n + 1)*start + ((n**2 + n)*step)/2
 
-def sum_multiple(i, start, end=None):
-    """Return the sum of all multiples of i between start and end.
+def sum_multiple(mult, start, quantity=None):
+    """Return the sum of quantity-number of multiples of mult.
     
-    If only two arguments, i and n, are entered; then it defaults to
-    calculating the sum of all multiples of i between 0 and n >= 0.
-    The function should only be used for integers where start <= end.
-    
+    If only two arguments are entered, it defaults to calculating the
+    sum of the first n multiples of mult starting from 0. All three
+    parameters should be positive integers; otherwise incorrect
+    results are possible.    
     >>> sum_multiple(2, 99)
-    2450
+    9702.0
     >>> sum_multiple(2, 7, 99)
-    2438
+    10494.0
     """
-    if end is None:
-        return sum_multiple(i, 0, start)
+    if quantity is None:
+        return sum_multiple(mult, 0, start)
     else:
-        start = i*ceil(start / i)
-        return sum_consec_numbers(start, end, i)
+        start = mult*ceil(start / mult)
+        return sum_consec_numbers(start, quantity, mult)
     
 def fib_div(i, n):
     """Generate all Fibonacci numbers > 0 and <= n and divisible by i.

@@ -14,20 +14,21 @@ from Project Euler.
 
 -- |The sumConsecNumbers function returns the sum of the first n numbers
 -- beginning from i. The only parameter that requires a positive integer is n.
--- The function is defined over the Double type. The function returns the sum of
--- i, i + j, i + 2*j,..., i + (n - 1)*j.
-sumConsecNumbers :: Double -> Integer -> Double -> Double
-sumConsecNumbers i n j = (m + 1) * i + (m ** 2 + m) * j / 2
-    where m = fromInteger (n - 1)::Double
+-- The function is defined over the RealFrac type for the other two parameters.
+-- The function returns the sum of i, i + j, i + 2*j,..., i + (n - 1)*j.
+sumConsecNumbers :: (RealFrac a, Integral b) => a -> b -> a -> a
+sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
+    where m = fromIntegral (n - 1)
 
 -- |The sumMultiple function sums the first n multiples of i starting
 -- from m. The only parameter that must be a positive integer is n.
+-- The other two parameters are defined for all RealFrac types.
 -- The function takes the sum of all integer multiples of i starting from m.
 -- If m is not a multiple of i, then the smallest multiple of i that's >= m is
 -- the starting point.
-sumMultiple      :: Double -> Double -> Integer -> Double
+sumMultiple      :: (RealFrac a, Integral b) => a -> a -> b -> a
 sumMultiple i m n = sumConsecNumbers j n i
-    where j = i * (fromIntegral (ceiling (m / i )::Integer))
+    where j = i * fromIntegral (ceiling (m / i )::Integer)
 
 -- |The fibAll function creates the infinite list of Fibonacci integers.
 fibAll :: [Integer]
@@ -101,13 +102,14 @@ smallestMultiple n = foldl f 1 $ take n allPrimes
 
 -- |The sumConsecSquares function returns the sum of the first n number
 -- of squares beginning from i. The only parameter that requires a positive
--- integer is n. The function is defined over the Double type.
--- for the i and j parameters. The function returns the sum of squares of
+-- integer is n. The function is defined over the RealFrac type for the other
+-- two parameters. The function returns the sum of squares of
 -- i, i + j, i + 2*j,..., i + (n - 1)*j.
-sumConsecSquares :: Double -> Integer -> Double -> Double
-sumConsecSquares i n j = (m + 1) * i ** 2 + (m ** 2 + m) * i * j + (2 * m ** 3 +
-                         3 * m ** 2 + m) * j ** 2 / 6
-    where m = fromInteger (n - 1)::Double
+sumConsecSquares :: (RealFrac a, Integral b) => a -> b -> a -> a
+sumConsecSquares i n j = (m + 1) * i ^ (2::Integer) + (m ^ (2::Integer) + m) *
+                         i * j + (2 * m ^ (3::Integer) + 3 * m ^ (2::Integer) +
+                         m) * j ^ (2::Integer) / 6
+    where m = fromIntegral (n - 1)
 
 -- |The primeNumber function returns the nth prime integer (indexed from 0).
 -- The function takes some time to run so integers larger than 15000 shouldn't
@@ -116,12 +118,13 @@ primeNumber  :: Integer -> Integer
 primeNumber n = allPrimes !! fromInteger n
 
 main :: IO()
-main  = do print (sumMultiple 3 1 (fromInteger ((999 `div` 3)::Integer)) +
-                  sumMultiple 5 1 (fromInteger ((999 `div` 5)::Integer)) - sumMultiple 15 1 (fromInteger ((999 `div` 15)::Integer)))
+main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +
+                  (sumMultiple 5 1 ((999 `div` 5)::Integer)::Double) -
+                  (sumMultiple 15 1 ((999 `div` 15)::Integer)::Double))
            print (sum $ fibDiv 2 4000000)
            print (last $ factorization 600851475143)
            print (palindromeProduct 3)
            print (smallestMultiple 20)
-           print (sumConsecNumbers 1 100 1 ** (2::Double) - sumConsecSquares 1
-                  100 1)
+           print ((sumConsecNumbers 1 (100::Integer) 1 ^ (2::Integer)::Double) -
+                  (sumConsecSquares 1 (100::Integer) 1::Double))
            print (primeNumber 10000)

@@ -12,18 +12,20 @@ The projectEuler module contains functions to calculate some of the problems
 from Project Euler.
 -}
 
--- |The sumConsecNumbers function adds every integer separated by a constant
--- integer bounded by two integers.
-sumConsecNumbers      :: Integer -> Integer -> Integer -> Integer
-sumConsecNumbers i n j = (2 * i + m * j) * (m + 1) `div` 2
-    where m = (n - i) `div` j
+-- |The sumConsecNumbers function returns the sum of the first n numbers
+-- beginning from i. The only parameter that requires a positive integer is n.
+-- The function works for all numbers in the Num typeclass for the 
+-- i and j parameters. The function returns the sum of
+-- i, i + j, i + 2*j,..., i + (n - 1)*j.
+sumConsecNumbers :: Double -> Double -> Double -> Double
+sumConsecNumbers i n j = (m + 1) * i + (m ** 2 + m) * j / 2
+    where m = n - 1
 
--- |The sumMultiple function sums all multiples of an integer bounded by two
--- integers.
-sumMultiple      :: Integer -> Integer -> Integer -> Integer
+-- |The sumMultiple function sums the first n multiples of an integer starting
+-- from m.
+sumMultiple      :: Double -> Double -> Double -> Double
 sumMultiple i m n = sumConsecNumbers j n i
-    where j = i * (ceiling ((fromIntegral m::Double) /
-              (fromIntegral i::Double))::Integer)
+    where j = i * (fromIntegral (ceiling (m / i )::Integer))
 
 -- |The fibAll function creates the infinite list of Fibonacci integers.
 fibAll :: [Integer]
@@ -95,26 +97,29 @@ smallestMultiple n = foldl f 1 $ take n allPrimes
     where f = \ q p -> p ^ (floor $ log (fromIntegral n::Double) / log
               (fromIntegral p::Double)::Integer) * q
 
--- |The sumConsecSquares function adds the square of every integer separated by
--- a constant integer bounded by two integers.
-sumConsecSquares      :: Integer -> Integer -> Integer -> Integer
-sumConsecSquares i n j = ((m + 1) * (m * j * (6 * i + j * (2 * m + 1)) + 6 *
-                          i ^ (2::Integer))) `div` 6
-    where m = (n - i) `div` j
+-- |The sumConsecSquares function returns the sum of the first n number
+-- of squares beginning from i. The only parameter that requires a positive
+-- integer is n. The function works for all numbers in the Num typeclass
+-- for the i and j parameters. The function returns the sum of squares of
+-- i, i + j, i + 2*j,..., i + (n - 1)*j.
+sumConsecSquares :: Double -> Double -> Double -> Double
+sumConsecSquares i n j = (m + 1) * i ** 2 + (m ** 2 + m) * i * j + (2 * m ** 3 +
+                         3 * m ** 2 + m) * j ** 2 / 6
+    where m = n - 1
 
 -- |The primeNumber function returns the nth prime integer (indexed from 0).
--- The function takes some time to run integers larger than 15000 shouldn't
+-- The function takes some time to run so integers larger than 15000 shouldn't
 -- be used.
 primeNumber  :: Integer -> Integer
 primeNumber n = allPrimes !! fromInteger n
 
 main :: IO()
-main  = do print (sumMultiple 3 1 999 + sumMultiple 5 1 999 - sumMultiple 15 1
-                  999)
+main  = do print (sumMultiple 3 1 (fromInteger ((999 `div` 3)::Integer)) +
+                  sumMultiple 5 1 (fromInteger ((999 `div` 5)::Integer)) - sumMultiple 15 1 (fromInteger ((999 `div` 15)::Integer)))
            print (sum $ fibDiv 2 4000000)
            print (last $ factorization 600851475143)
            print (palindromeProduct 3)
            print (smallestMultiple 20)
-           print (sumConsecNumbers 1 100 1 ^ (2::Integer) - sumConsecSquares 1
+           print (sumConsecNumbers 1 100 1 ** (2::Double) - sumConsecSquares 1
                   100 1)
            print (primeNumber 10000)

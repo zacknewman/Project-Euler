@@ -20,8 +20,7 @@ def sum_consec_numbers(start, quantity=None, step=1):
     
     The only parameter that requires a positive integer is quantity.
     The function works for all complex numbers for the start and step
-    parameters. If non-integer values are used for start and step, then
-    the function returns the sum of start, start + step,
+    parameters. The function returns the sum of start, start + step,
     start + 2*step,..., start + (quantity - 1)*step.
     
     >>> sum_consec_numbers(10)
@@ -29,7 +28,7 @@ def sum_consec_numbers(start, quantity=None, step=1):
     >>> sum_consec_numbers(2, 21, 2)
     462.0
     >>> sum_consec_numbers(complex(cmath.e, cmath.pi), 5,
-    complex(cmath.sqrt(2), cmath.pi**2))
+                           complex(cmath.sqrt(2), cmath.pi**2))
     (27.733544766026178+114.40400727884256j)
     """
     if quantity is None:
@@ -81,7 +80,8 @@ def factorization(n):
     
     This function is a rather simple implementation that can be
     greatly improved (e.g., general number field sieve); consequently
-    this function may take a long time to compute if the number exceeds 20 digits. In the case of very large integers one must employ sieve theory
+    this function may take a long time to compute if the number exceeds 20 digits.
+    In the case of very large integers one must employ sieve theory
     techniques.
     
     >>> factorization(24)
@@ -230,8 +230,7 @@ def sum_consec_squares(start, quantity=None, step=1):
     
     The only parameter that requires a positive integer is quantity.
     The function works for all complex numbers for the start and step
-    parameters. If non-integer values are used for start and step, then
-    the function returns the sum of squares of start, start + step,
+    parameters. The function returns the sum of squares of start, start + step,
     start + 2*step,..., start + (quantity - 1)*step.
     
     >>> sum_consec_squares(10)
@@ -239,7 +238,7 @@ def sum_consec_squares(start, quantity=None, step=1):
     >>> sum_consec_squares(2, 21, 2)
     13244.0
     >>> sum_consec_squares(complex(cmath.e, cmath.pi), 5,
-    complex(cmath.sqrt(2), cmath.pi**2))
+                           complex(cmath.sqrt(2), cmath.pi**2))
     (-3417.9163855736806+1548.286030897781j)
     """
     if quantity is None:

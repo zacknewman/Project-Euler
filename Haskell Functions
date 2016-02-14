@@ -14,19 +14,20 @@ from Project Euler.
 
 -- |The sumConsecNumbers function returns the sum of the first n numbers
 -- beginning from i. The only parameter that requires a positive integer is n.
--- The function is defined over the RealFrac type for the other two parameters.
--- The function returns the sum of i, i + j, i + 2*j,..., i + (n - 1)*j.
-sumConsecNumbers :: (RealFrac a, Integral b) => a -> b -> a -> a
+-- The function is defined over the RealFloat typeclass for the other two
+-- parameters. The function returns the sum of i, i + j, i + 2*j,...,
+-- i + (n - 1)*j.
+sumConsecNumbers :: (RealFloat a, Integral b) => a -> b -> a -> a
 sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
     where m = fromIntegral (n - 1)
 
 -- |The sumMultiple function sums the first n multiples of i starting
 -- from m. The only parameter that must be a positive integer is n.
--- The other two parameters are defined for all RealFrac types.
+-- The other two parameters are defined for all RealFloat typeclass.
 -- The function takes the sum of all integer multiples of i starting from m.
 -- If m is not a multiple of i, then the smallest multiple of i that's >= m is
 -- the starting point.
-sumMultiple      :: (RealFrac a, Integral b) => a -> a -> b -> a
+sumMultiple      :: (RealFloat a, Integral b) => a -> a -> b -> a
 sumMultiple i m n = sumConsecNumbers j n i
     where j = i * fromIntegral (ceiling (m / i )::Integer)
 
@@ -102,10 +103,10 @@ smallestMultiple n = foldl f 1 $ take n allPrimes
 
 -- |The sumConsecSquares function returns the sum of the first n number
 -- of squares beginning from i. The only parameter that requires a positive
--- integer is n. The function is defined over the RealFrac type for the other
--- two parameters. The function returns the sum of squares of
+-- integer is n. The function is defined over the RealFloat typeclass for the
+-- other two parameters. The function returns the sum of squares of
 -- i, i + j, i + 2*j,..., i + (n - 1)*j.
-sumConsecSquares :: (RealFrac a, Integral b) => a -> b -> a -> a
+sumConsecSquares :: (RealFloat a, Integral b) => a -> b -> a -> a
 sumConsecSquares i n j = (m + 1) * i ^ (2::Integer) + (m ^ (2::Integer) + m) *
                          i * j + (2 * m ^ (3::Integer) + 3 * m ^ (2::Integer) +
                          m) * j ^ (2::Integer) / 6

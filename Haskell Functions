@@ -23,7 +23,7 @@ sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
 
 -- |The sumMultiple function sums the first n multiples of i starting
 -- from m. The only parameter that must be a positive integer is n.
--- The other two parameters are defined over the RealFloat typeclass.
+-- The other two parameters are defined for all RealFloat typeclass.
 -- The function takes the sum of all integer multiples of i starting from m.
 -- If m is not a multiple of i, then the smallest multiple of i that's >= m is
 -- the starting point.
@@ -72,15 +72,14 @@ palindromeProduct n = maximum $ filter palindromicNumber xs
 
 -- |The composite function tests if an integer is composite. The function
 -- employs Fermat's Little Theorem which works for all non-Carmichael composite
--- numbers. There are much more advanced number-theoretic techniques that can be
--- used to improve the performance. The function outputs False for numbers less
--- than 2, prime numbers, and Carmichael composite numbers; therefore only True
+-- numbers. The function outputs False for numbers less than 2,
+-- prime numbers, and Carmichael composite numbers; therefore only True
 -- outputs should be considered.
 composite  :: Integer -> Bool
 composite n
-    | n <= 2    = False
-    | otherwise = head (filter (\ p -> n `mod` p /= 0) (2:[3,5..])) ^ (n - 1)
-                  `mod` n /= 1
+    | n <= 2         = False
+    | n `mod` 2 == 0 = True
+    | otherwise = 2 ^ (n - 1) `mod` n /= 1
 
 -- |The prime function tests if an integer is prime. This is a very simple
 -- function that first tests if a number is composite using the "composite"

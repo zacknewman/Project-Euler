@@ -144,12 +144,10 @@ def palindrome_product(digits):
 def composite(n):
     """Test if n is a composite number.
     
-    The function employs Fermat's Little Theorem which works
-    for all non-Carmichael composite numbers. There are much more
-    advanced number-theoretic techniques that can be used to improve
-    the performance. The function outputs None for numbers less than 2,
-    prime numbers, and Carmichael composite numbers; therefore only
-    True outputs should be considered.
+    The function employs Fermat's Little Theorem which works for all
+    non-Carmichael composite numbers. The function outputs None for
+    numbers less than 2, prime numbers, and Carmichael composite numbers;
+    therefore only True outputs should be considered.
     
     >>> composite(10)
     True
@@ -157,11 +155,10 @@ def composite(n):
     """
     if n <= 2:
         return None
+    elif n % 2 == 0:
+        return True
     else:
-        for i in range(2, n, 1):
-            if n % i != 0:
-                break
-        if i**(n - 1) % n != 1:
+        if 2**(n - 1) % n != 1:
             return True
         else:
             return None

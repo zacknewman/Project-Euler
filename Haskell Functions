@@ -12,6 +12,8 @@ The projectEuler module contains functions to calculate some of the problems
 from Project Euler.
 -}
 
+import Data.List as Listfunctions
+
 -- |The sumConsecNumbers function returns the sum of the first n numbers
 -- beginning from i. The only parameter that requires a positive integer is n.
 -- The function is defined over the RealFloat typeclass for the other two
@@ -114,9 +116,25 @@ sumConsecSquares i n j = (m + 1) * i ^ (2::Integer) + (m ^ (2::Integer) + m) *
 -- |The primeNumber function returns the nth prime integer (indexed from 0).
 -- The function takes some time to run so integers larger than 15000 shouldn't
 -- be used.
-primeNumber  :: Integer -> Integer
-primeNumber n = allPrimes !! fromInteger n
+primeNumber  :: Int -> Integer
+primeNumber n = allPrimes !! n
 
+-- |The digitProduct function returns a list containing the largest
+-- product of m consecutive digits in n. If there are multiple instances
+-- of the same product, there will be duplicate values.
+digitProduct    :: Int -> [Integer] -> [Integer]
+digitProduct m xs
+    | length xs < m = []
+    | otherwise     = product (take m xs) : digitProduct m ys
+    where ys = drop 1 xs
+
+-- |The digitProductTuple function returns a tuple containing a list
+-- of each list of m consecutive integers that lead to the largest
+-- possible product and the product itself.
+digitProductTuple    :: Int -> Integer -> ([[Integer]], Integer)
+digitProductTuple m n = ([take m $ drop i digits | i <- elemIndices (maximum prod) prod], maximum prod)
+    where (digits, prod) = (toDigits n, digitProduct m digits)
+    
 main :: IO()
 main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +
                   (sumMultiple 5 1 ((999 `div` 5)::Integer)::Double) -
@@ -128,3 +146,4 @@ main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +
            print ((sumConsecNumbers 1 (100::Integer) 1 ^ (2::Integer)::Double) -
                   (sumConsecSquares 1 (100::Integer) 1::Double))
            print (primeNumber 10000)
+           print(digitProductTuple 13 [1000-digit number])

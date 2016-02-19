@@ -288,3 +288,27 @@ def digit_product(n, m):
             d.append(p)
             answer = tuple(d)
     return answer
+
+def pythagorean_triple_bound(n):
+    """Return the Pythagorean triple whose sum is equal to n.
+    
+    A tuple containing the triple is returned; if there exists no such
+    triple, then None is returned.
+    
+    >>> pythagorean_triple_bound(12)
+    (3, 4, 5)
+    >>> pythagorean_triple_bound(10)
+    None
+    """
+    u = int(((4*n + 1)**(0.5) - 1)/2) + 1
+    if u % 2 != 0:
+        u -= 1
+    l = ceil(((2*n + 1)**(0.5) + 1)/2)
+    if l % 2 == 0:
+        l += 1
+    for i in range(l, u, 2):
+        if n % i == 0:
+            j = n//i - i
+            return (i*j, (i**2 - j**2)//2, (i**2 + j**2)//2)
+    else:
+        return None

@@ -132,8 +132,10 @@ digitProduct m xs
 -- of each list of m consecutive integers that lead to the largest
 -- possible product and the product itself.
 digitProductTuple    :: Int -> Integer -> ([[Integer]], Integer)
-digitProductTuple m n = ([take m $ drop i digits | i <- elemIndices (maximum prod) prod], maximum prod)
-    where (digits, prod) = (toDigits n, digitProduct m digits)
+digitProductTuple m n = ([take m $ drop i digits | i <- elemIndices max prod],
+                         max)
+    where (digits, prod, max) = (toDigits n, digitProduct m digits, maximum
+                                 prod)
     
 main :: IO()
 main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +

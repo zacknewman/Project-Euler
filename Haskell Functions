@@ -107,11 +107,10 @@ smallestMultiple n = foldl f 1 $ take n allPrimes
 -- integer is n. The function is defined over the RealFloat typeclass for the
 -- other two parameters. The function returns the sum of squares of
 -- i, i + j, i + 2*j,..., i + (n - 1)*j.
-sumConsecSquares :: (RealFloat a, Integral b) => a -> b -> a -> a
-sumConsecSquares i n j = (m + 1) * i ^ (2::Integer) + (m ^ (2::Integer) + m) *
-                         i * j + (2 * m ^ (3::Integer) + 3 * m ^ (2::Integer) +
-                         m) * j ^ (2::Integer) / 6
-    where m = fromIntegral (n - 1)
+sumConsecSquares :: (RealFrac a, Floating a, Integral b) => a -> b -> a -> a
+sumConsecSquares i n j = (m + 1) * i ^ x + (m ^ x + m) * i * j + (2 * m ^ y + 3
+                         * m ^ x + m) * j ^ x / 6
+    where (x, y, m) = (2::Integer, 3::Integer, fromIntegral (n - 1))
 
 -- |The primeNumber function returns the nth prime integer (indexed from 0).
 -- The function takes some time to run so integers larger than 15000 shouldn't
@@ -129,14 +128,37 @@ digitProduct m xs
     where ys = drop 1 xs
 
 -- |The digitProductTuple function returns a tuple containing a list
--- of each list of m consecutive integers that lead to the largest
+-- of each list of m consecutive integers in n that lead to the largest
 -- possible product and the product itself.
 digitProductTuple    :: Int -> Integer -> ([[Integer]], Integer)
-digitProductTuple m n = ([take m $ drop i digits | i <- elemIndices max prod],
-                         max)
-    where (digits, prod, max) = (toDigits n, digitProduct m digits, maximum
-                                 prod)
-    
+digitProductTuple m n = ([take m $ drop i digits | i <- elemIndices largest
+                        prod], largest)
+    where (digits, prod, largest) = (toDigits n, digitProduct m digits, maximum
+                                     prod)
+
+-- |The pythagoreanTriple function returns the tuple containing any
+-- primitive Pythagorean triple based on two inputted integers. It is the
+-- implementation of the Pythagorean Triples Theorem.
+pythagoreanTriple  :: (Integral a) => a -> a -> (a, a, a)
+pythagoreanTriple s t = (s * t, (s ^ i - t ^ i) `div` 2, (s ^ i + t ^ i) `div`
+                        2)
+    where i = 2::Integer
+
+-- |The pythagoreanTripleBoundSum function returns the tuple containing
+-- the Pythagorean triple whose sum equals the inputted integer or
+-- Nothing if there doesn't exist such a triple.
+pythagoreanTripleBoundSum  :: (Integral a) => a -> Maybe (a, a, a)
+pythagoreanTripleBoundSum n
+    | v == [] = Nothing
+    | otherwise = Just $ pythagoreanTriple s t
+        where (m, l, u, j, k, v, s, t) = (fromIntegral n::Double, ceiling ((sqrt
+                                         (2 * m + 1) + 1) / 2), floor ((sqrt (4
+                                         * m + 1) - 1) / 2), if l `mod` 2 == 0
+                                         then l + 1 else l, if u `mod` 2 == 0
+                                         then u + 1 else u, filter (\ i ->
+                                         ceiling m `mod` i == 0) [j, j + 2..k],
+                                         head v, ceiling m `div` s - s)
+
 main :: IO()
 main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +
                   (sumMultiple 5 1 ((999 `div` 5)::Integer)::Double) -
@@ -149,3 +171,4 @@ main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +
                   (sumConsecSquares 1 (100::Integer) 1::Double))
            print (primeNumber 10000)
            print(digitProductTuple 13 [1000-digit number])
+           print (pythagoreanTripleBoundSum (1000::Integer))

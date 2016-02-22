@@ -90,16 +90,24 @@ def factorization(n):
     [2, 2, 2, 3]
     """
     primes = []
-    d = 3
+    p = 5
+    q = 7
     while n % 2 == 0:
         primes.append(2)
         n //= 2
+    while n % 3 == 0:
+        primes.append(3)
+        n //= 3
     while n > 1:
-        while n % d == 0:
-            primes.append(d)
-            n //= d
-        d += 2
-        if (d*d > n) and (n > 1):
+        while n % p == 0:
+            primes.append(p)
+            n //= p
+        while n % q == 0:
+            primes.append(q)
+            n //= q
+        p += 6
+        q += 6
+        if (p*p > n) and (n > 1):
             primes.append(n)
             break
     return primes

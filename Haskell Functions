@@ -156,18 +156,3 @@ pythagoreanTripleBoundSum n
                                          then u + 1 else u, filter (\ i ->
                                          ceiling m `mod` i == 0) [j, j + 2..k],
                                          head v, ceiling m `div` s - s)
-
-main :: IO()
-main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +
-                  (sumMultiple 5 1 ((999 `div` 5)::Integer)::Double) -
-                  (sumMultiple 15 1 ((999 `div` 15)::Integer)::Double))
-           print (sum $ fibDiv 2 4000000)
-           print (last $ factorization 600851475143)
-           print (palindromeProduct 3)
-           print (smallestMultiple 20)
-           print ((sumConsecNumbers 1 (100::Integer) 1 ^ (2::Integer)::Double) -
-                  (sumConsecSquares 1 (100::Integer) 1::Double))
-           print (primeNumber 10000)
-           print (digitProductTuple 13 num)
-           print (maybe 0 product $ pythagoreanTripleBoundSum (1000::Integer))
-           print (sum $ listPrimes 2000000)

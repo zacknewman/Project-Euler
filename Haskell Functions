@@ -49,8 +49,8 @@ fibDiv i n = filter (\ k -> k `mod` i == 0) $ takeWhile (<= n) fibAll
 factorization  :: Integer -> [Integer]
 factorization 1 = []
 factorization n = p:factorization (n `div` p)
-        where p = head $ filter (\ x -> n `mod` x == 0) (2:[3,5..round $ sqrt
-                  (fromIntegral n::Double)] ++ [n])
+    where (m, p) = (round $ sqrt (fromIntegral n::Double), head $ filter (\ x ->
+                    n `mod` x == 0) ((2:3:[5,11..m]) ++ [7,13..m] ++ [n]))
 
 -- |The toDigits function maps a non-negative integer into a list of the
 -- integer's digit(s).
@@ -72,24 +72,21 @@ palindromeProduct n = maximum $ filter palindromicNumber xs
     where xs = [i * j | i <- [10 ^ (n - 1)..10 ^ n - 1], j <- [10 ^ (n - 1)..10
                 ^ n - 1]]
 
--- |The composite function tests if an integer is composite. The function
--- employs Fermat's Little Theorem which works for all non-Carmichael composite
--- numbers. The function outputs False for numbers less than 2,
--- prime numbers, and Carmichael composite numbers; therefore only True
--- outputs should be considered.
-composite  :: Integer -> Bool
-composite n
-    | n <= 2         = False
-    | n `mod` 2 == 0 = True
-    | otherwise = 2 ^ (n - 1) `mod` n /= 1
-
--- |The prime function tests if an integer is prime. This is a very simple
--- function that first tests if a number is composite using the "composite"
--- function, then factorizes the number to test its primality. Consequently this
--- function may take a lot of time to compute if the number exceeds 20 digits.
--- In the case of very large integers one must employ sieve theory techniques.
+-- |The prime function tests if an integer is prime. This is a very
+-- simple function; consequently this function may take a lot of time
+-- to compute if the number exceeds 20 digits. In the case of very large
+-- integers one must employ sieve theory techniques.
 prime  :: Integer -> Bool
-prime n = if composite n then False else factorization n == [n]
+prime n = [n] == factorization n
+
+-- |The listPrimes function produces an unsorted list of all primes
+-- bounded by an integer.
+listPrimes  :: Integer -> [Integer]
+listPrimes n
+    | n < 2     = []
+    | n == 2    = [2]
+    | n < 5     = [2, 3]
+    | otherwise = filter prime ((2:3:[5,11..n]) ++ [7,13..n])
 
 -- |The allPrimes function produces the list of all primes.
 allPrimes :: [Integer]
@@ -97,8 +94,8 @@ allPrimes  = filter prime (2:[3,5..])
 
 -- |The smallestMultiple function produces the smallest integer that is a
 -- multiple of every integer from 1 to n.
-smallestMultiple  :: Int -> Integer
-smallestMultiple n = foldl f 1 $ take n allPrimes
+smallestMultiple  :: Integer -> Integer
+smallestMultiple n = foldl f 1 $ listPrimes n
     where f = \ q p -> p ^ (floor $ log (fromIntegral n::Double) / log
               (fromIntegral p::Double)::Integer) * q
 
@@ -170,5 +167,6 @@ main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +
            print ((sumConsecNumbers 1 (100::Integer) 1 ^ (2::Integer)::Double) -
                   (sumConsecSquares 1 (100::Integer) 1::Double))
            print (primeNumber 10000)
-           print(digitProductTuple 13 [1000-digit number])
+           print (digitProductTuple 3 12345)
            print (pythagoreanTripleBoundSum (1000::Integer))
+           print (sum $ listPrimes 2000000)

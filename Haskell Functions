@@ -136,15 +136,15 @@ digitProductTuple m n = ([take m $ drop i digits | i <- elemIndices largest
 -- |The pythagoreanTriple function returns the tuple containing any
 -- primitive Pythagorean triple based on two inputted integers. It is the
 -- implementation of the Pythagorean Triples Theorem.
-pythagoreanTriple  :: (Integral a) => a -> a -> (a, a, a)
-pythagoreanTriple s t = (s * t, (s ^ i - t ^ i) `div` 2, (s ^ i + t ^ i) `div`
-                        2)
+pythagoreanTriple  :: (Integral a) => a -> a -> [a]
+pythagoreanTriple s t = [s * t, (s ^ i - t ^ i) `div` 2, (s ^ i + t ^ i) `div`
+                        2]
     where i = 2::Integer
 
--- |The pythagoreanTripleBoundSum function returns the tuple containing
+-- |The pythagoreanTripleBoundSum function returns the list containing
 -- the Pythagorean triple whose sum equals the inputted integer or
 -- Nothing if there doesn't exist such a triple.
-pythagoreanTripleBoundSum  :: (Integral a) => a -> Maybe (a, a, a)
+pythagoreanTripleBoundSum  :: (Integral a) => a -> Maybe [a]
 pythagoreanTripleBoundSum n
     | v == [] = Nothing
     | otherwise = Just $ pythagoreanTriple s t
@@ -167,6 +167,6 @@ main  = do print ((sumMultiple 3 1 ((999 `div` 3)::Integer)::Double) +
            print ((sumConsecNumbers 1 (100::Integer) 1 ^ (2::Integer)::Double) -
                   (sumConsecSquares 1 (100::Integer) 1::Double))
            print (primeNumber 10000)
-           print (digitProductTuple 3 12345)
-           print (pythagoreanTripleBoundSum (1000::Integer))
+           print (digitProductTuple 13 num)
+           print (maybe 0 product $ pythagoreanTripleBoundSum (1000::Integer))
            print (sum $ listPrimes 2000000)

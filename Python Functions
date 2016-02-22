@@ -3,6 +3,8 @@ from math import log, ceil
 def product(iterable):
     """Return the product of every element in an iterable.
     
+    The product of an empty iterable is returned as 0.
+    
     >>> product(range(1, 8))
     5040
     """
@@ -141,69 +143,56 @@ def palindrome_product(digits):
                 continue
     return prod
 
-def composite(n):
-    """Test if n is a composite number.
-    
-    The function employs Fermat's Little Theorem which works for all
-    non-Carmichael composite numbers. The function outputs None for
-    numbers less than 2, prime numbers, and Carmichael composite numbers;
-    therefore only True outputs should be considered.
-    
-    >>> composite(10)
-    True
-    >>> composite(3*11*17)
-    """
-    if n <= 2:
-        return None
-    elif n % 2 == 0:
-        return True
-    else:
-        if 2**(n - 1) % n != 1:
-            return True
-        else:
-            return None
-
 def prime(n):
     """Test if n is a prime number.
     
-    This is a very simple function that first tests if a number
-    is composite using the "composite" function, then loops through
-    integers to test if they divide n. Consequently this function
-    may take a long time to compute if the number exceeds 20 digits.
+    This is a very simple function; consequently it may take a
+    long time to compute if the number exceeds 20 digits.
     In the case of very large integers one must employ sieve theory
     techniques.
     
     >>> prime(19)
     True
     """
-    if composite(n):
+    if n < 2:
+        return False
+    elif n == 2 or n == 3:
+        return True
+    elif n % 2 == 0 or n % 3 == 0:
         return False
     else:
-        if n <= 1:
-            return False
-        elif n == 2:
-            return True
+        j = int(n**0.5) + 1
+        for i in range(5, j, 6):
+            if n % i == 0:
+                return False
+        for k in range(7, j, 6):
+            if n % k == 0:
+                return False
         else:
-            j = int(n**0.5) + 1
-            for i in range(3, j, 2):
-                if n % i == 0:
-                    return False
-            else:
-                return True
+            return True
 
 def prime_generator(n):
-    """Generate all primes <= n.
+    """Generate all unsorted primes <= n.
     
-    >>> list(prime_generator(10))
-    [2, 3, 5, 7]
+    >>> list(prime_generator(11))
+    [2, 3, 5, 11, 7]
     """
-    if n <= 1:
+    if n < 2:
         pass
+    elif n == 2:
+        yield 2
+    elif n < 5:
+        yield 2
+        yield 3
     else:
         yield 2
-        for i in range(3, n + 1, 2):
+        yield 3
+        for i in range(5, n + 1, 6):
             if prime(i):
                 yield i
+        for j in range(7, n + 1, 6):
+            if prime(j):
+                yield j               
 
 def smallest_multiple(n):
     """Return the smallest multiple of all numbers from 1 to n.
@@ -249,7 +238,7 @@ def prime_number(n):
     """Return the nth prime number (indexed from 0).
     
     The function returns the nth prime integer (indexed from 0).
-    The function takes some time to run, so integers larger than 15000
+    The function takes some time to run, so integers larger than 1000000
     shouldn't be used.
     
     >>> prime_number(3)
@@ -257,14 +246,23 @@ def prime_number(n):
     """
     if n == 0:
         return 2
+    elif n == 1:
+        return 3
     else:
-        p = 3
-        j = 0
-        while j < n:
+        p = 5
+        q = 7
+        i = 1
+        while i < n:
             if prime(p):
-                j += 1
-            p += 2
-        return p - 2
+                i += 1
+            if prime(q):
+                i += 1   
+            p += 6
+            q += 6
+        if j == n and prime(p - 6):
+            return p - 6
+        else:
+            return q - 6
 
 def digit_product(n, m):
     """Return the largest product of m consecutive digits in n.

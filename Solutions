@@ -1,11 +1,11 @@
 Problem 1.
 Find the sum of all the multiples of 3 or 5 below 1000.
->>> sum_multiple(3, 999//3 + 1) + sum_multiple(5, 999//5 + 1) - sum_multiple(15, 999//15 + 1)
+>>> sum_consec_numbers(3, 999//3, 3) + sum_consec_numbers(5, 999//5, 5) - sum_consec_numbers(15, 999//15, 15)
 233168.0
 
 Problem 2.
 By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
->>> sum_fib_div(2, 4000000)
+>>> sum(filter(lambda x: x % 2 == 0, fib(4000000)))
 4613732
 
 Problem 3.

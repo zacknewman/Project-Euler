@@ -38,44 +38,17 @@ def sum_consec_numbers(start, quantity=None, step=1):
     else:
         n = quantity - 1
         return (n + 1)*start + ((n**2 + n)*step)/2
-
-def sum_multiple(mult, start, quantity=None):
-    """Return the sum of quantity-number of multiples of mult.
     
-    If only two arguments are entered, it defaults to calculating the
-    sum of the first n multiples of mult starting from 0. All three
-    parameters should be positive integers; otherwise incorrect
-    results are possible.    
-    >>> sum_multiple(2, 99)
-    9702.0
-    >>> sum_multiple(2, 7, 99)
-    10494.0
-    """
-    if quantity is None:
-        return sum_multiple(mult, 0, start)
-    else:
-        start = mult*ceil(start / mult)
-        return sum_consec_numbers(start, quantity, mult)
+def fib(n):
+    """Generate all Fibonacci number > 0 and <= n.
     
-def fib_div(i, n):
-    """Generate all Fibonacci numbers > 0 and <= n and divisible by i.
-        
-    >>> list(fib_div(2,10))
-    [2, 8]
+    >>> list(fib(10))
+    [1, 1, 2, 3, 5, 8]
     """
     a, b = 0, 1
     while b <= n:
         a, b = b, a + b
-        if a % i == 0:
-            yield a
-
-def sum_fib_div(i, n):
-    """Return the sum of all Fibonacci numbers <= n and divisible by i.
-        
-    >>> sum_fib_div(2, 10)
-    10
-    """
-    return sum(fib_div(i, n))
+        yield a
 
 def factorization(n):
     """Return a list of the prime factorization of n.
@@ -127,7 +100,7 @@ def palindromic_number(n):
         return False
 
 def palindrome_product(digits):
-    """Return a tuple containing a palindromic product of two numbers.
+    """Return a tuple containing the largest possible palindromic product.
     
     The parameter, digits, is the number of digits the two numbers that
     will be multiplied have. The product of these two numbers is the

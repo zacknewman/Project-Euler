@@ -10,7 +10,7 @@ By considering the terms in the Fibonacci sequence whose values do not exceed fo
 
 Problem 3.
 What is the largest prime factor of the number 600851475143?
->>> max(factorization(600851475143))
+>>> factorization(600851475143)[-1]
 6857
 
 Problem 4.

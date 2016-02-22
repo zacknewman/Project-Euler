@@ -1,5 +1,5 @@
 {- |
-Module      : projectEuler
+Module      : ProjectEuler
 Description : Project Euler functions
 Copyright   : (c) Zack Newman
 License     :
@@ -8,11 +8,12 @@ Maintainer  : zacknewman22@gmail.com
 Stability   : stable
 Portability : portable
 
-The projectEuler module contains functions to calculate some of the problems
+The ProjectEuler module contains functions to calculate some of the problems
 from Project Euler.
 -}
 
-import Data.List as Listfunctions
+module ProjectEuler where
+import Data.List
 
 -- |The sumConsecNumbers function returns the sum of the first n numbers
 -- beginning from i. The only parameter that requires a positive integer is n.

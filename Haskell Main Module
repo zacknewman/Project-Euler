@@ -1,0 +1,18 @@
+module Main where
+import ProjectEuler
+
+main :: IO()
+main  = do print ((sumConsecNumbers 3 ((999 `div` 3)::Integer) 3 +
+                  sumConsecNumbers 5 ((999 `div` 5)::Integer) 5 -
+                  sumConsecNumbers 15 ((999 `div` 15)::Integer) 15)::Double)
+           print (sum $ filter (\ i -> i `mod` 2 == 0) $ takeWhile (<= 4000000)
+                  fibAll)
+           print (last $ factorization 600851475143)
+           print (palindromeProduct 3)
+           print (smallestMultiple 20)
+           print ((sumConsecNumbers 1 (100::Integer) 1 ^ (2::Integer)::Double) -
+                  (sumConsecSquares 1 (100::Integer) 1::Double))
+           print (allPrimes !! 10000)
+           print (digitProduct 3 123456)
+           print (maybe 0 product $ pythagoreanTripleBoundSum (1000::Integer))
+           print (sum $ listPrimes 2000000)

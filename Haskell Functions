@@ -13,35 +13,19 @@ from Project Euler.
 -}
 
 module ProjectEuler where
-import Data.List
 
 -- |The sumConsecNumbers function returns the sum of the first n numbers
 -- beginning from i. The only parameter that requires a positive integer is n.
 -- The function is defined over the RealFloat typeclass for the other two
 -- parameters. The function returns the sum of i, i + j, i + 2*j,...,
 -- i + (n - 1)*j.
-sumConsecNumbers :: (RealFloat a, Integral b) => a -> b -> a -> a
+sumConsecNumbers      :: (RealFloat a, Integral b) => a -> b -> a -> a
 sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
     where m = fromIntegral (n - 1)
-
--- |The sumMultiple function sums the first n multiples of i starting
--- from m. The only parameter that must be a positive integer is n.
--- The other two parameters are defined for all RealFloat typeclass.
--- The function takes the sum of all integer multiples of i starting from m.
--- If m is not a multiple of i, then the smallest multiple of i that's >= m is
--- the starting point.
-sumMultiple      :: (RealFloat a, Integral b) => a -> a -> b -> a
-sumMultiple i m n = sumConsecNumbers j n i
-    where j = i * fromIntegral (ceiling (m / i )::Integer)
 
 -- |The fibAll function creates the infinite list of Fibonacci integers.
 fibAll :: [Integer]
 fibAll  = 0:1:zipWith (+) fibAll (tail fibAll)
-
--- |The fibDiv function creates the list of Fibonacci integers bounded by an
--- integer and divisible by another integer.
-fibDiv    :: Integer -> Integer -> [Integer]
-fibDiv i n = filter (\ k -> k `mod` i == 0) $ takeWhile (<= n) fibAll
 
 -- |The factorization function creates a list of the prime factorization of any
 -- positive integer. This function is a rather simple implementation that can be
@@ -105,34 +89,17 @@ smallestMultiple n = foldl f 1 $ listPrimes n
 -- integer is n. The function is defined over the RealFloat typeclass for the
 -- other two parameters. The function returns the sum of squares of
 -- i, i + j, i + 2*j,..., i + (n - 1)*j.
-sumConsecSquares :: (RealFrac a, Floating a, Integral b) => a -> b -> a -> a
+sumConsecSquares     :: (RealFrac a, Floating a, Integral b) => a -> b -> a -> a
 sumConsecSquares i n j = (m + 1) * i ^ x + (m ^ x + m) * i * j + (2 * m ^ y + 3
                          * m ^ x + m) * j ^ x / 6
     where (x, y, m) = (2::Integer, 3::Integer, fromIntegral (n - 1))
 
--- |The primeNumber function returns the nth prime integer (indexed from 0).
--- The function takes some time to run so integers larger than 15000 shouldn't
--- be used.
-primeNumber  :: Int -> Integer
-primeNumber n = allPrimes !! n
-
--- |The digitProduct function returns a list containing the largest
--- product of m consecutive digits in n. If there are multiple instances
--- of the same product, there will be duplicate values.
-digitProduct    :: Int -> [Integer] -> [Integer]
-digitProduct m xs
-    | length xs < m = []
-    | otherwise     = product (take m xs) : digitProduct m ys
-    where ys = drop 1 xs
-
--- |The digitProductTuple function returns a tuple containing a list
--- of each list of m consecutive integers in n that lead to the largest
--- possible product and the product itself.
-digitProductTuple    :: Int -> Integer -> ([[Integer]], Integer)
-digitProductTuple m n = ([take m $ drop i digits | i <- elemIndices largest
-                        prod], largest)
-    where (digits, prod, largest) = (toDigits n, digitProduct m digits, maximum
-                                     prod)
+-- |The digitProduct function returns the largest product of m
+-- consecutive digits in n.
+digitProduct    :: Int -> Integer -> Integer
+digitProduct m n = maximum (consecProduct m (toDigits n))
+    where consecProduct i xs = if length xs < m then [] else product (take i
+                               xs):consecProduct i (drop 1 xs)
 
 -- |The pythagoreanTriple function returns the tuple containing any
 -- primitive Pythagorean triple based on two inputted integers. It is the
@@ -142,7 +109,7 @@ pythagoreanTriple s t = [s * t, (s ^ i - t ^ i) `div` 2, (s ^ i + t ^ i) `div`
                         2]
     where i = 2::Integer
 
--- |The pythagoreanTripleBoundSum function returns the list containing
+-- |The pythagoreanTripleBoundSum function returns the tuple containing
 -- the Pythagorean triple whose sum equals the inputted integer or
 -- Nothing if there doesn't exist such a triple.
 pythagoreanTripleBoundSum  :: (Integral a) => a -> Maybe [a]

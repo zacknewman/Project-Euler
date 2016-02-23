@@ -289,3 +289,58 @@ def pythagorean_triple_bound(n):
             return (i*j, (i**2 - j**2)//2, (i**2 + j**2)//2)
     else:
         return None
+
+def grid_product(rows: list, n: int, k: int) -> float:
+    """Return the largest product of k adjacent numbers in an n x n grid.
+    
+    The grid must be inputted as a list of lists, i.e., a list of the rows
+    of the grid which are lists themselves.
+    
+    >>> grid_product([[1,4,6],[3,2,9],[11,0,12]], 3, 2)    
+    12  
+    """
+    columns = zip(*rows)
+    diagonals1 = []
+    diagonals2 = []
+    diagonals3 = []
+    diagonals4 = []
+    products = []
+    seq = []
+    for j in range(n - k + 1):
+        for i in range(n - j):
+            seq.append(rows[i][i + j])
+        diagonals1.append(seq)
+        seq = []
+    for j in range(n - k):
+        for i in range(n - 1, j, -1):
+            seq.append(rows[i][i - j - 1])
+        diagonals2.append(seq)
+        seq = []
+    for j in range(n - 1, 2, -1):
+        for i in range(j + 1):
+            seq.append(rows[i][j - i])
+        diagonals3.append(seq)
+        seq = []
+    for j in range(1, n - k + 1):
+        for i in range(j, n):
+            seq.append(rows[i][n - 1 + j - i])
+        diagonals4.append(seq)
+    for i, j in enumerate(rows):
+        for l in range(n - k + 1):
+            products.append(product(j[l : l + k]))
+    for i, j in enumerate(columns):
+        for l in range(n - k + 1):
+            products.append(product(j[l : l + k]))
+    for i, j in enumerate(diagonals1):
+        for l in range(n - k + 1 - i):
+            products.append(product(j[l : l + k]))
+    for i, j in enumerate(diagonals2):
+        for l in range(n - k - i):
+            products.append(product(j[l : l + k]))
+    for i, j in enumerate(diagonals3):
+        for l in range(n - k + 1 - i):
+            products.append(product(j[l : l + k]))
+    for i, j in enumerate(diagonals4):
+        for l in range(n - k - i):
+            products.append(product(j[l : l + k]))
+    return max(products)

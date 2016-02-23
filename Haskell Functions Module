@@ -27,7 +27,7 @@ sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
 fibAll :: [Integer]
 fibAll  = 0:1:zipWith (+) fibAll (tail fibAll)
 
--- |The factorization function creates a list of the prime factorization of any
+-- |The factorization function creates the unsorted list of the prime factorization of any
 -- positive integer. This function is a rather simple implementation that can be
 -- greatly improved (e.g., general number field sieve), and so should only be
 -- used for integers up to 20-digits in length.
@@ -37,7 +37,7 @@ factorization n = p:factorization (n `div` p)
     where (m, p) = (round $ sqrt (fromIntegral n::Double), head $ filter (\ x ->
                     n `mod` x == 0) ((2:3:[5,11..m]) ++ [7,13..m] ++ [n]))
 
--- |The toDigits function maps a non-negative integer into a list of the
+-- |The toDigits function maps a non-negative integer to the list of the
 -- integer's digit(s).
 toDigits       :: Integer -> [Integer]
 toDigits n
@@ -66,11 +66,10 @@ prime n = [n] == factorization n
 
 -- |The listPrimes function produces an unsorted list of all primes
 -- bounded by an integer.
-listPrimes  :: Integer -> [Integer]
+listPrimes     :: Integer -> [Integer]
 listPrimes n
     | n < 2     = []
     | n == 2    = [2]
-    | n < 5     = [2, 3]
     | otherwise = filter prime ((2:3:[5,11..n]) ++ [7,13..n])
 
 -- |The allPrimes function produces the list of all primes.
@@ -97,9 +96,9 @@ sumConsecSquares i n j = (m + 1) * i ^ x + (m ^ x + m) * i * j + (2 * m ^ y + 3
 -- |The digitProduct function returns the largest product of m
 -- consecutive digits in n.
 digitProduct    :: Int -> Integer -> Integer
-digitProduct m n = maximum (consecProduct m (toDigits n))
-    where consecProduct i xs = if length xs < m then [] else product (take i
-                               xs):consecProduct i (drop 1 xs)
+digitProduct m n = maximum $ f m $ toDigits n
+    where f i xs = if length xs < m then [] else product (take i xs):f i (drop 1
+                   xs)
 
 -- |The pythagoreanTriple function returns the tuple containing any
 -- primitive Pythagorean triple based on two inputted integers. It is the
@@ -114,7 +113,7 @@ pythagoreanTriple s t = [s * t, (s ^ i - t ^ i) `div` 2, (s ^ i + t ^ i) `div`
 -- Nothing if there doesn't exist such a triple.
 pythagoreanTripleBoundSum  :: (Integral a) => a -> Maybe [a]
 pythagoreanTripleBoundSum n
-    | v == [] = Nothing
+    | v == []   = Nothing
     | otherwise = Just $ pythagoreanTriple s t
         where (m, l, u, j, k, v, s, t) = (fromIntegral n::Double, ceiling ((sqrt
                                          (2 * m + 1) + 1) / 2), floor ((sqrt (4

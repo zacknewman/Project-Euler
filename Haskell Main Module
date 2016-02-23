@@ -13,6 +13,6 @@ main  = do print ((sumConsecNumbers 3 ((999 `div` 3)::Integer) 3 +
            print ((sumConsecNumbers 1 (100::Integer) 1 ^ (2::Integer) -
                   sumConsecSquares 1 (100::Integer) 1)::Double)
            print (allPrimes !! 10000)
-           print (digitProduct 3 123456)
+           print (digitProduct 13 [insert 1000-digit number])
            print (maybe 0 product $ pythagoreanTripleBoundSum (1000::Integer))
            print (sum $ listPrimes 2000000)

@@ -16,10 +16,10 @@ module ProjectEuler where
 
 -- |The sumConsecNumbers function returns the sum of the first n numbers
 -- beginning from i. The only parameter that requires a positive integer is n.
--- The function is defined over the RealFloat typeclass for the other two
+-- The function is defined over the Fractional class for the other two
 -- parameters. The function returns the sum of i, i + j, i + 2*j,...,
 -- i + (n - 1)*j.
-sumConsecNumbers      :: (RealFloat a, Integral b) => a -> b -> a -> a
+sumConsecNumbers      :: (Fractional a, Integral b) => a -> b -> a -> a
 sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
     where m = fromIntegral (n - 1)
 
@@ -27,9 +27,10 @@ sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
 fibAll :: [Integer]
 fibAll  = 0:1:zipWith (+) fibAll (tail fibAll)
 
--- |The factorization function creates the unsorted list of the prime factorization of any
--- positive integer. This function is a rather simple implementation that can be
--- greatly improved (e.g., general number field sieve), and so should only be
+-- |The factorization function creates the unsorted list of the prime
+-- factorization of any positive integer. This function is a rather simple
+-- implementation that can be greatly improved
+-- (e.g., general number field sieve), and so should only be
 -- used for integers up to 20-digits in length.
 factorization  :: Integer -> [Integer]
 factorization 1 = []
@@ -85,10 +86,10 @@ smallestMultiple n = foldl f 1 $ listPrimes n
 
 -- |The sumConsecSquares function returns the sum of the first n number
 -- of squares beginning from i. The only parameter that requires a positive
--- integer is n. The function is defined over the RealFloat typeclass for the
--- other two parameters. The function returns the sum of squares of
+-- integer is n. The function is defined over the Fractional class
+-- for the other two parameters. The function returns the sum of squares of
 -- i, i + j, i + 2*j,..., i + (n - 1)*j.
-sumConsecSquares     :: (RealFrac a, Floating a, Integral b) => a -> b -> a -> a
+sumConsecSquares      :: (Fractional a, Integral b) => a -> b -> a -> a
 sumConsecSquares i n j = (m + 1) * i ^ x + (m ^ x + m) * i * j + (2 * m ^ y + 3
                          * m ^ x + m) * j ^ x / 6
     where (x, y, m) = (2::Integer, 3::Integer, fromIntegral (n - 1))
@@ -100,9 +101,10 @@ digitProduct m n = maximum $ f m $ toDigits n
     where f i xs = if length xs < m then [] else product (take i xs):f i (drop 1
                    xs)
 
--- |The pythagoreanTriple function returns the tuple containing any
+-- |The pythagoreanTriple function returns the tuple containing the
 -- primitive Pythagorean triple based on two inputted integers. It is the
--- implementation of the Pythagorean Triples Theorem.
+-- implementation of the Pythagorean Triples Theorem. The parameters
+-- s and t need to be odd integers such that s > t >= 1.
 pythagoreanTriple  :: (Integral a) => a -> a -> [a]
 pythagoreanTriple s t = [s * t, (s ^ i - t ^ i) `div` 2, (s ^ i + t ^ i) `div`
                         2]
@@ -122,3 +124,43 @@ pythagoreanTripleBoundSum n
                                          then u + 1 else u, filter (\ i ->
                                          ceiling m `mod` i == 0) [j, j + 2..k],
                                          head v, ceiling m `div` s - s)
+
+-- |The transpose function transposes the lists inside of a list.
+transpose             :: [[a]] -> [[a]]
+transpose []           = []
+transpose ([]:xss )    = transpose xss
+transpose ((x:xs):xss) = (x:[y | (y:_) <- xss]):transpose (xs:[zs | (_:zs) <-
+                         xss])
+
+-- |The rowProductMax function returns the largest product of k adjacent numbers
+-- in the rows of an m x n grid.
+rowProductMax      :: (Num a, Ord a) => [[a]] -> Int -> a
+rowProductMax xss k = maximum $ map (\ xs -> if length xs < k then 0 else maximum $ f k xs) xss
+    where f i ys = if length ys < k then [] else product (take i ys):f i (drop 1 ys)
+    
+-- |The columnProductMax function returns the largest product of k adjacent
+-- numbers in the columns of an m x n grid.
+columnProductMax      :: (Num a, Ord a) => [[a]] -> Int -> a
+columnProductMax xss k = rowProductMax (transpose xss) k
+
+-- |The diagonalProductMax function returns the largest product of k adjacent
+-- numbers in the diagonals of an n x n grid.
+diagonalProductMax      :: (Num a, Ord a) => [[a]] -> Int -> a
+diagonalProductMax xss k = maximum [d1, d2, d3, d4]
+    where (f, f2, f3, f4, f5, d1, d2, d3, d4) =
+                                                (\ (x, i) -> drop i x, \ xs ->
+                                                reverse xs, columnProductMax, \
+                                                pss -> zip pss [0..length (xss
+                                                !! 0) - 1], \ qss -> transpose $
+                                                drop 1 qss, f3 (map f $ f4 xss)
+                                                k, f3 (map f $ f4 $ map f2 xss)
+                                                k, f3 (map f $ f4 $ f5 xss) k,
+                                                f3 (map f $ f4 $ f5 $ map f2
+                                                xss) k)
+
+-- |The gridProductMax function returns the largest product of k adjacent
+-- numbers an n x n grid.
+gridProductMax      :: (Num a, Ord a) => [[a]] -> Int -> a
+gridProductMax xss k = maximum [rows, columns, diagonals]
+    where (rows, columns, diagonals) = (rowProductMax xss k, columnProductMax
+                                        xss k, diagonalProductMax xss k)

@@ -16,3 +16,4 @@ main  = do print ((sumConsecNumbers 3 ((999 `div` 3)::Integer) 3 +
            print (digitProduct 13 [insert 1000-digit number])
            print (maybe 0 product $ pythagoreanTripleBoundSum (1000::Integer))
            print (sum $ listPrimes 2000000)
+           print (gridProductMax ([insert 20 x 20 grid]::[[Integer]]) 4)

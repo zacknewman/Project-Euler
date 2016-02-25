@@ -6,7 +6,7 @@ def product(iterable):
     The product of an empty iterable is returned as 0.
     
     >>> product(range(1, 8))
-    540
+    5040
     """
     j = 1
     for i in iterable:
@@ -108,7 +108,7 @@ def palindrome_product(digits):
     any two numbers with that many digits.
     
     >>> palindrome_product(2)
-    (99, 91, 99)
+    (99, 91, 9009)
     """
     n = int(10**digits - 1)
     m = int(10**(digits - 1) - 1)
@@ -170,7 +170,7 @@ def prime_generator(n):
             if prime(i):
                 yield i
         for i in range(7, n + 1, 6):
-            if prime(j):
+            if prime(i):
                 yield i               
 
 def smallest_multiple(n):
@@ -258,7 +258,7 @@ def digit_product(n, m):
     for i in w:
         digits.append(int(i))
     for i in range(l - m + 1):
-        d = digits[j : j + m]
+        d = digits[i : i + m]
         j = product(d)
         if j > p:
             p = j
@@ -275,7 +275,6 @@ def pythagorean_triple_bound(n):
     >>> pythagorean_triple_bound(12)
     (3, 4, 5)
     >>> pythagorean_triple_bound(10)
-    None
     """
     u = int(((4*n + 1)**(0.5) - 1)/2) + 1
     if u % 2 != 0:

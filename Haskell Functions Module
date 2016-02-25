@@ -133,34 +133,34 @@ transpose ((x:xs):xss) = (x:[y | (y:_) <- xss]):transpose (xs:[zs | (_:zs) <-
                          xss])
 
 -- |The rowProductMax function returns the largest product of k adjacent numbers
--- in the rows of an m x n grid.
-rowProductMax      :: (Num a, Ord a) => [[a]] -> Int -> a
-rowProductMax xss k = maximum $ map (\ xs -> if length xs < k then 0 else maximum $ f k xs) xss
+-- in the rows of any shaped grid.
+rowProductMax      :: (Num a, Ord a) => Int -> [[a]] -> a
+rowProductMax k xss = maximum $ map (\ xs -> if length xs < k then 0 else maximum $ f k xs) xss
     where f i ys = if length ys < k then [] else product (take i ys):f i (drop 1 ys)
     
 -- |The columnProductMax function returns the largest product of k adjacent
--- numbers in the columns of an m x n grid.
-columnProductMax      :: (Num a, Ord a) => [[a]] -> Int -> a
-columnProductMax xss k = rowProductMax (transpose xss) k
+-- numbers in the columns of any shaped grid.
+columnProductMax      :: (Num a, Ord a) => Int -> [[a]] -> a
+columnProductMax k xss = rowProductMax k $ transpose xss
 
 -- |The diagonalProductMax function returns the largest product of k adjacent
 -- numbers in the diagonals of an n x n grid.
-diagonalProductMax      :: (Num a, Ord a) => [[a]] -> Int -> a
-diagonalProductMax xss k = maximum [d1, d2, d3, d4]
+diagonalProductMax      :: (Num a, Ord a) => Int -> [[a]] -> a
+diagonalProductMax k xss = maximum [d1, d2, d3, d4]
     where (f, f2, f3, f4, f5, d1, d2, d3, d4) =
-                                                (\ (x, i) -> drop i x, \ xs ->
+                                                (\ (xs, i) -> drop i xs, \ xs ->
                                                 reverse xs, columnProductMax, \
-                                                pss -> zip pss [0..length (xss
-                                                !! 0) - 1], \ qss -> transpose $
-                                                drop 1 qss, f3 (map f $ f4 xss)
-                                                k, f3 (map f $ f4 $ map f2 xss)
-                                                k, f3 (map f $ f4 $ f5 xss) k,
-                                                f3 (map f $ f4 $ f5 $ map f2
-                                                xss) k)
+                                                yss -> zip yss [0..length (xss
+                                                !! 0) - 1], \ yss -> transpose $
+                                                drop 1 yss, f3 k $ map f $ f4
+                                                xss, f3 k $ map f $ f4 $ map f2
+                                                xss, f3 k $ map f $ f4 $ f5 xss,
+                                                f3 k $ map f $ f4 $ f5 $ map f2
+                                                xss)
 
 -- |The gridProductMax function returns the largest product of k adjacent
 -- numbers an n x n grid.
-gridProductMax      :: (Num a, Ord a) => [[a]] -> Int -> a
-gridProductMax xss k = maximum [rows, columns, diagonals]
-    where (rows, columns, diagonals) = (rowProductMax xss k, columnProductMax
-                                        xss k, diagonalProductMax xss k)
+gridProductMax      :: (Num a, Ord a) => Int -> [[a]] -> a
+gridProductMax k xss = maximum [rows, columns, diagonals]
+    where (rows, columns, diagonals) = (rowProductMax k xss, columnProductMax
+                                        k xss, diagonalProductMax k xss)

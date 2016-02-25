@@ -19,7 +19,7 @@ module ProjectEuler where
 -- The function is defined over the Fractional class for the other two
 -- parameters. The function returns the sum of i, i + j, i + 2*j,...,
 -- i + (n - 1)*j.
-sumConsecNumbers      :: (Fractional a, Integral b) => a -> b -> a -> a
+sumConsecNumbers      :: (Fractional a) => a -> Integer -> a -> a
 sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
     where m = fromIntegral (n - 1)
 
@@ -43,8 +43,9 @@ factorization n = p:factorization (n `div` p)
 toDigits       :: Integer -> [Integer]
 toDigits n
     | n < 0     = error "Argument must be a non-negative integer."
-    | n > 9     = toDigits (n `div` 10) ++ [n `mod` 10]
+    | n > 9     = toDigits i ++ [j]
     | otherwise = [n]
+        where (i, j) = n `divMod` 10
 
 -- |The palindromicNumber function tests if a non-negative integer is a
 -- palindromic integer.
@@ -89,7 +90,7 @@ smallestMultiple n = foldl f 1 $ listPrimes n
 -- integer is n. The function is defined over the Fractional class
 -- for the other two parameters. The function returns the sum of squares of
 -- i, i + j, i + 2*j,..., i + (n - 1)*j.
-sumConsecSquares      :: (Fractional a, Integral b) => a -> b -> a -> a
+sumConsecSquares      :: (Fractional a) => a -> Integer -> a -> a
 sumConsecSquares i n j = (m + 1) * i ^ x + (m ^ x + m) * i * j + (2 * m ^ y + 3
                          * m ^ x + m) * j ^ x / 6
     where (x, y, m) = (2::Integer, 3::Integer, fromIntegral (n - 1))
@@ -98,8 +99,8 @@ sumConsecSquares i n j = (m + 1) * i ^ x + (m ^ x + m) * i * j + (2 * m ^ y + 3
 -- consecutive digits in n.
 digitProduct    :: Int -> Integer -> Integer
 digitProduct m n = maximum $ f m $ toDigits n
-    where f i xs = if length xs < m then [] else product (take i xs):f i (drop 1
-                   xs)
+    where f = \ i xs -> if length xs < m then [] else product (take i xs):f i
+              (drop 1 xs)
 
 -- |The pythagoreanTriple function returns the tuple containing the
 -- primitive Pythagorean triple based on two inputted integers. It is the
@@ -135,8 +136,10 @@ transpose ((x:xs):xss) = (x:[y | (y:_) <- xss]):transpose (xs:[zs | (_:zs) <-
 -- |The rowProductMax function returns the largest product of k adjacent numbers
 -- in the rows of any shaped grid.
 rowProductMax      :: (Num a, Ord a) => Int -> [[a]] -> a
-rowProductMax k xss = maximum $ map (\ xs -> if length xs < k then 0 else maximum $ f k xs) xss
-    where f i ys = if length ys < k then [] else product (take i ys):f i (drop 1 ys)
+rowProductMax k xss = maximum $ map (\ xs -> if length xs < k then 0 else
+                      maximum $ f k xs) xss
+    where f = \ i xs -> if length xs < k then [] else product (take i xs):f i
+              (drop 1 xs)
     
 -- |The columnProductMax function returns the largest product of k adjacent
 -- numbers in the columns of any shaped grid.

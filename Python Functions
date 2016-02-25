@@ -29,8 +29,7 @@ def sum_consec_numbers(start, quantity=None, step=1):
     45.0
     >>> sum_consec_numbers(2, 21, 2)
     462.0
-    >>> sum_consec_numbers(complex(cmath.e, cmath.pi), 5,
-                           complex(cmath.sqrt(2), cmath.pi**2))
+    >>> sum_consec_numbers(complex(e, pi), 5, complex(sqrt(2), pi**2))
     (27.73354476626178+114.44727884256j)
     """
     if quantity is None:
@@ -202,8 +201,7 @@ def sum_consec_squares(start, quantity=None, step=1):
     285.0
     >>> sum_consec_squares(2, 21, 2)
     13244.0
-    >>> sum_consec_squares(complex(cmath.e, cmath.pi), 5,
-                           complex(cmath.sqrt(2), cmath.pi**2))
+    >>> sum_consec_squares(complex(e, pi), 5, complex(sqrt(2), pi**2))
     (-3417.916385573686+1548.2863897781j)
     """
     if quantity is None:
@@ -289,14 +287,14 @@ def pythagorean_triple_bound(n):
     else:
         return None
         
-def grid_product(rows: list, k: int) -> float:
+def grid_product(rows: [float], k: int) -> float:
     """Return the largest product of k adjacent numbers in an n x n grid.
     
     The grid must be inputted as a list of lists, i.e., a list of the rows
     of the grid which are lists themselves.
     
-    >>> grid_product([[1,4,6],[3,2,9],[11,0,12]], 2)    
-    108
+    >>> grid_product([[pi,4,6],[e,2,9],[11,sqrt(2),.2]],2)
+    54
     """
     n = len(rows[0])
     columns = zip(*rows)

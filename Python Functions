@@ -217,7 +217,7 @@ def prime_number(n):
     """Return the nth prime number (indexed from 0).
     
     The function returns the nth prime integer (indexed from 0).
-    The function takes some time to run, so integers larger than 1000
+    The function takes some time to run, so integers larger than 1000000
     shouldn't be used.
     
     >>> prime_number(3)

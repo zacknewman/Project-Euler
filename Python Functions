@@ -342,3 +342,42 @@ def grid_product(rows: [float], k: int) -> float:
         for l in range(n - k - i):
             products.append(product(j[l : l + k]))
     return max(products)
+
+def multiplicities(n):
+    """Generate the multiplicities (plus 1) of each prime factor of n.
+    
+    The reason it adds 1 to each multiplicity is that it can be used
+    to calculate the total number of factors since for any prime, p,
+    with multiplicity i, one has i + 1 number of choices to
+    include in a product.
+    
+    >>>list(multiplicities(24))
+    [4, 2]
+    """
+    primes = factorization(n)
+    unique = set(primes)
+    for i in unique:
+        yield primes.count(i) + 1
+        
+def number_of_factors(n):
+    """Return the number of factors of n (including 1 and n).
+    
+    >>> number_of_factors(10)
+    4
+    """
+    return product(multiplicities(n))
+
+def triangle_factors_bound(n):
+    """Return the first triangle number that has more than n factors.
+    
+    >>> triangle_factors_bound(10)
+    120
+    """
+    i = 1
+    while True:
+        j = sum_consec_numbers(1, i, 1)
+        k = number_of_factors(j)
+        if k > n:
+            return j
+        else:
+            i += 1

@@ -13,6 +13,7 @@ from Project Euler.
 -}
 
 module ProjectEuler where
+import Data.List (group)
 
 -- |The sumConsecNumbers function returns the sum of the first n numbers
 -- beginning from i. The only parameter that requires a positive integer is n.
@@ -167,3 +168,12 @@ gridProductMax      :: (Num a, Ord a) => Int -> [[a]] -> a
 gridProductMax k xss = maximum [rows, columns, diagonals]
     where (rows, columns, diagonals) = (rowProductMax k xss, columnProductMax
                                         k xss, diagonalProductMax k xss)
+
+-- |The numberFactors function returns the number of factors of n
+-- (including 1 and n).
+numberFactors  :: Integer -> Integer
+numberFactors n
+    | n < 1     = error "Argument must be a positive integer."
+    | n == 1    = 1
+    | otherwise = product $ map (\ p -> toInteger (length p + 1)) $ group $
+                  factorization n

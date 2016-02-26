@@ -89,3 +89,8 @@ rows =
 
 >>> grid_product(rows, 20, 4)
 70600674
+
+Problem 12.
+What is the value of the first triangle number to have over five hundred divisors?
+>>> triangle_factors_bound(500)
+76576500.0

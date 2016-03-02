@@ -1,4 +1,6 @@
-from math import log, ceil
+from math import ceil, log, floor
+from itertools import starmap, dropwhile
+from functools import reduce
 
 def product(iterable):
     """Return the product of every element in an iterable.
@@ -293,7 +295,7 @@ def grid_product(rows: [float], k: int) -> float:
     The grid must be inputted as a list of lists, i.e., a list of the rows
     of the grid which are lists themselves.
     
-    >>> grid_product([[pi,4,6],[e,2,9],[11,sqrt(2),.2]],2)
+    >>> grid_product([[pi, 4, 6], [e, 2, 9], [11, sqrt(2), 0.2]], 2)
     54
     """
     n = len(rows[0])
@@ -342,42 +344,91 @@ def grid_product(rows: [float], k: int) -> float:
         for l in range(n - k - i):
             products.append(product(j[l : l + k]))
     return max(products)
-
-def multiplicities(n):
-    """Generate the multiplicities (plus 1) of each prime factor of n.
     
-    The reason it adds 1 to each multiplicity is that it can be used
-    to calculate the total number of factors since for any prime, p,
-    with multiplicity i, one has i + 1 number of choices to
-    include in a product.
+def potential_highly_composite(lower, upper, divisors, length, exponents=[], depth=0):
+    """Return all potential highly composite numbers bounded by length.
     
-    >>>list(multiplicities(24))
-    [4, 2]
+    The function is really only useful in that it is used recursively by
+    another function "highly_composite_number" to calculate the highly composite
+    numbers. This function's sole purpose is to create all potential highly
+    composite numbers with at least an inputted number of divisors (the
+    "divisors" parameter). The lower and upper parameters are the lower and
+    upper bounds of the exponent for 2. The length parameter is the number of
+    unique primes in the potential highly composite number. This function
+    employs known facts about the possible forms of highly composite
+    numbers most famously proven by Srinivasa Ramanujan.
+    
+    >>> potential_highly_composite(1, 3, 6, 2)
+    [30, 60, 180, 120, 360, 1080]
     """
-    primes = factorization(n)
-    unique = set(primes)
-    for i in unique:
-        yield primes.count(i) + 1
-        
-def number_of_factors(n):
-    """Return the number of factors of n (including 1 and n).
-    
-    >>> number_of_factors(10)
-    4
-    """
-    return product(multiplicities(n))
+    potential = []
+    if depth == length:
+        exponents.append(1)
+        mult = reduce(lambda x,y: x*(y+1), exponents, 1)
+        if mult >= divisors:
+            prim = zip(primes[:-1],exponents)
+            val = list(starmap(pow, prim))
+            hcn = product(val)
+            potential.append(hcn)
+    else:
+        for i in range(lower, upper + 1):
+            lower = floor(log(primes[length])/log(primes[depth+1]))
+            upper = min(i, 2*ceil(log(primes[length+1])/log(primes[depth+1])) - 1)
+            new_exponents = exponents + [i]
+            potential.extend(potential_highly_composite(lower, upper, divisors, length, exponents=new_exponents, depth=depth+1))
+    return potential
 
-def triangle_factors_bound(n):
-    """Return the first triangle number that has more than n factors.
+def highly_composite_number(n):
+    """Return the minimum highly composite number with at least n divisors.
     
-    >>> triangle_factors_bound(10)
+    >>> highly_composite_number(8)
+    24
+    """
+    if n == 1:
+        return 1
+    elif n == 2:
+        return 2
+    elif n == 3:
+        return 4
+    elif n == 9:
+        return 36
+    else:
+        m = floor(log(n)/log(2))
+        global primes
+        primes = list(map(prime_number,range(m + 1)))
+        potential = []
+        potential2 = []
+        for i in range(1,m):
+            l = floor(log(primes[i])/log(2))
+            u = 2*ceil(log(primes[i+1])/log(2)) - 1
+            hcn = potential_highly_composite(l,u,n,i)
+            potential.append(hcn)
+        for i in potential:
+            if i == []:
+                continue
+            else:
+                potential2.append(min(i))
+        return min(potential2)
+
+def triangular_number_factors(n):
+    """Return the first triangular number that has more than n factors.
+    
+    >>> triangular_number_factors(10)
     120
     """
-    i = 1
+    hcn = highly_composite_number(n)    
+    start = ceil(((1 + 8*hcn)**0.5 -1)/2) + 1
+    ys = factorization(start)
     while True:
-        j = sum_consec_numbers(1, i, 1)
-        k = number_of_factors(j)
-        if k > n:
-            return j
+        xs,ys = ys, factorization(start+1)
+        primes = xs + ys
+        primes.sort()
+        j = primes.count(2)
+        oddprimes = dropwhile(lambda x: x == 2, primes)
+        unique = set(oddprimes)
+        for i in unique:
+            j *= primes.count(i) + 1
+        if j > n:
+            return start*(start+1)//2
         else:
-            i += 1
+            start += 1

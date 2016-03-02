@@ -413,6 +413,10 @@ def highly_composite_number(n):
 def triangular_number_factors(n):
     """Return the first triangular number that has more than n factors.
     
+    The function first uses the "highly composite number" function
+    to determine the minimum possible size of the triangular number
+    before looping to find the result.
+    
     >>> triangular_number_factors(10)
     120
     """

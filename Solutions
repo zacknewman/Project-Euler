@@ -92,5 +92,5 @@ rows =
 
 Problem 12.
 What is the value of the first triangle number to have over five hundred divisors?
->>> triangle_factors_bound(500)
-76576500.0
+>>> triangular_number_factors(500)
+76576500

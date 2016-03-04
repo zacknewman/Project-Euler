@@ -17,5 +17,5 @@ main  = do print ((sumConsecNumbers 3 ((999 `div` 3)::Integer) 3 +
            print (maybe 0 product $ pythagoreanTripleBoundSum (1000::Integer))
            print (sum $ listPrimes 2000000)
            print (gridProductMax 4 (20x20Grid::[[Integer]]))
-           print (head $ filter (\ i -> numberFactors i > 500) $ map (\ i ->
-                  round $ sumConsecNumbers (1::Double) i (1::Double)) [1..])
+           print (triangularNumberFactors 500)
+           print (take 10 $ toDigits $ sum listOf50DigitNumbers)

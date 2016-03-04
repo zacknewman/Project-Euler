@@ -13,7 +13,7 @@ from Project Euler.
 -}
 
 module ProjectEuler where
-import Data.List (group)
+import Data.List (group, sort)
 
 -- |The sumConsecNumbers function returns the sum of the first n numbers
 -- beginning from i. The only parameter that requires a positive integer is n.
@@ -22,7 +22,7 @@ import Data.List (group)
 -- i + (n - 1)*j.
 sumConsecNumbers      :: (Fractional a) => a -> Integer -> a -> a
 sumConsecNumbers i n j = (m + 1) * i + (m ^ (2::Integer) + m) * j / 2
-    where m = fromIntegral (n - 1)
+    where m = fromInteger (n - 1)
 
 -- |The fibAll function creates the infinite list of Fibonacci integers.
 fibAll :: [Integer]
@@ -36,7 +36,7 @@ fibAll  = 0:1:zipWith (+) fibAll (tail fibAll)
 factorization  :: Integer -> [Integer]
 factorization 1 = []
 factorization n = p:factorization (n `div` p)
-    where (m, p) = (round $ sqrt (fromIntegral n::Double), head $ filter (\ x ->
+    where (m, p) = (round $ sqrt (fromInteger n::Double), head $ filter (\ x ->
                     n `mod` x == 0) ((2:3:[5,11..m]) ++ [7,13..m] ++ [n]))
 
 -- |The toDigits function maps a non-negative integer to the list of the
@@ -83,8 +83,8 @@ allPrimes  = filter prime (2:[3,5..])
 -- multiple of every integer from 1 to n.
 smallestMultiple  :: Integer -> Integer
 smallestMultiple n = foldl f 1 $ listPrimes n
-    where f = \ q p -> p ^ (floor $ log (fromIntegral n::Double) / log
-              (fromIntegral p::Double)::Integer) * q
+    where f = \ q p -> p ^ (floor $ log (fromInteger n::Double) / log
+              (fromInteger p::Double)::Integer) * q
 
 -- |The sumConsecSquares function returns the sum of the first n number
 -- of squares beginning from i. The only parameter that requires a positive
@@ -94,7 +94,7 @@ smallestMultiple n = foldl f 1 $ listPrimes n
 sumConsecSquares      :: (Fractional a) => a -> Integer -> a -> a
 sumConsecSquares i n j = (m + 1) * i ^ x + (m ^ x + m) * i * j + (2 * m ^ y + 3
                          * m ^ x + m) * j ^ x / 6
-    where (x, y, m) = (2::Integer, 3::Integer, fromIntegral (n - 1))
+    where (x, y, m) = (2::Integer, 3::Integer, fromInteger (n - 1))
 
 -- |The digitProduct function returns the largest product of m
 -- consecutive digits in n.
@@ -169,11 +169,49 @@ gridProductMax k xss = maximum [rows, columns, diagonals]
     where (rows, columns, diagonals) = (rowProductMax k xss, columnProductMax
                                         k xss, diagonalProductMax k xss)
 
--- |The numberFactors function returns the number of factors of n
--- (including 1 and n).
-numberFactors  :: Integer -> Integer
-numberFactors n
-    | n < 1     = error "Argument must be a positive integer."
+-- |The potentialHighlyComposite function returns a list of potential
+-- highly composite numbers according to the required forms most famously proven
+-- by Srinivasa Ramanujan. The function's primary purpose is its use by
+-- by another function "highlyCompositeNumber" to calculate the minimum
+-- highly composite number with at least a given number of factors. This
+-- functions requires an input for the number of unique primes, an input
+-- for the minimum number of factors, and a list of the possible primes
+-- the potential highly composite number is composed of.
+potentialHighlyComposite       :: Int -> Integer -> [Integer] -> [Integer]
+potentialHighlyComposite 1 _ _  = []
+potentialHighlyComposite i n xs = [product $ zipWith (^) zs rs | rs <- filter (\
+                                   js -> reverse js == sort js) $ sequence
+                                   ([[floor ((log (fromInteger $ last
+                                   zs)::Double) / (log (fromInteger
+                                   j)::Double))..2 * ceiling ((log (fromInteger
+                                   $ last ys::Double)) / (log (fromInteger
+                                   j)::Double)) - 1] | j <- qs] ++ [[1]]),
+                                   product (zipWith (+) [1,1..] rs) >= n] ++
+                                   potentialHighlyComposite (i - 1) n xs
+    where (ys, zs, qs) = (take (i + 1) xs, init ys, init zs)
+
+-- |The highlyCompositeNumber function returns the minimum highly composite
+-- number with at least an integer-number of factors.
+highlyCompositeNumber :: Integer -> Integer
+highlyCompositeNumber n
     | n == 1    = 1
-    | otherwise = product $ map (\ p -> toInteger (length p + 1)) $ group $
-                  factorization n
+    | n == 2    = 2
+    | n == 3    = 4
+    | n == 9    = 36
+    | otherwise = minimum (potentialHighlyComposite i n xs)
+        where (i, xs) = (floor ((log (fromInteger n)::Double) / log 2), take (i
+                         + 1) allPrimes)
+
+-- |The triangularNumberFactors function returns the first triangular number
+-- with at least an integer-number of factors. It first invokes the
+-- "highlyCompositeNumber" function in order to bypass testing too-small
+-- numbers.
+triangularNumberFactors :: Integer -> Integer
+triangularNumberFactors n = h $ head $ filter (\ (_, y) -> y > n) $ zip [i..] $
+                            map g $ map f $ zipWith (++) xs $ tail xs
+    where (i, xs, f, g, h) = (ceiling (((sqrt (fromInteger (1 + 8 *
+                              highlyCompositeNumber n))::Double) - 1) / 2) + 1,
+                              map factorization [i..], \ ys -> group $ tail $
+                              sort ys, \ xss -> if xss == [] then 1 else
+                              toInteger (length (head xss) + 1) * g (tail xss),
+                              \ (a, _) -> a * (a + 1) `div` 2)

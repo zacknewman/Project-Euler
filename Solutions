@@ -165,7 +165,7 @@ how many routes are there through a 20×20 grid?
 137846528820
 
 Problem 16.
-What is the sum of the digits of the number 21000?
+What is the sum of the digits of the number 2 ^ 1000?
 >>> sum([int(i) for i in str(2**1000)])
 1366
 

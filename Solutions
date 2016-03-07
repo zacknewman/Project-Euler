@@ -162,3 +162,8 @@ Starting in the top left corner and ending in the bottom right corner and only m
 how many routes are there through a 20×20 grid?
 >>> lattice(20)
 137846528820
+
+Problem 16.
+What is the sum of the digits of the number 21000?
+>>> sum([int(i) for i in str(2**1000)])
+1366

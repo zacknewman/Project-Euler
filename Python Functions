@@ -450,7 +450,7 @@ def collatz_max_length(n):
     caches the lengths of each value, memory will become an issue for larger
     inputs as will the time it takes to complete. This function repeatedly
     composes the Collatz function on itself until a value of 1 is reached for
-    every number between 1 and n. A tuple containing the most compositions and
+    every number less than n. A tuple containing the most compositions and
     the responsible value is returned.
     
     >>> collatz_max_length(13)
@@ -472,21 +472,18 @@ def collatz_max_length(n):
     b = cached_lengths.index(a) + 1
     return a, b
 
-def lattice(n):
-    """Return the number of ways one can move through an n x n grid.
+def factorial(n):
+    """Return the factorial of a non-negative integer.
     
-    The only "legal" moves are those that move right or down, begin
-    at the top left corner and end in the bottom right corner.
-    
-    >>> lattice(3)
-    20
+    >>> factorial(4)
+    24
     """
-    a = []
-    b = [1]
-    for i in range(2, n + 1):
-        for j in range(1, i):
-            a.append(sum(b[:j]))
-        a.append(2*sum(b))
-        b = a
-        a = []
-    return 2*sum(b)
+    return product(range(1, n + 1))
+
+def combination(n, k):
+    """Return the number of k-length subsets from an n-length set.
+    
+    >>> combination(4, 2)
+    6
+    """
+    return product(range(n - k + 1, n + 1))//product(range(1, k + 1))

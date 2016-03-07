@@ -402,7 +402,7 @@ def highly_composite_number(n):
         primes = list(map(prime_number, range(m + 1)))
         potential = []
         potential2 = []
-        for i in range(1,m):
+        for i in range(1, m):
             l = floor(log(primes[i])/log(2))
             u = 2*ceil(log(primes[i + 1])/log(2)) - 1
             hcn = potential_highly_composite(primes, l, u, n, i)
@@ -440,3 +440,53 @@ def triangular_number_factors(n):
             return start*(start + 1)//2
         else:
             start += 1
+
+def collatz_max_length(n):
+    """Return the integer with the maximum Collatz sequence length.
+    
+    While the Collatz conjecture hasn't been proven to be true, no
+    counterexample has been found either. Therefore one can "safely"
+    assume this function will always produce a value. Because this function
+    caches the lengths of each value, memory will become an issue for larger
+    inputs as will the time it takes to complete. This function repeatedly
+    composes the Collatz function on itself until a value of 1 is reached for
+    every number between 1 and n. A tuple containing the most compositions and
+    the responsible value is returned.
+    
+    >>> collatz_max_length(13)
+    (20, 9)
+    """
+    cached_lengths = [1]
+    for i in range (2, n):
+        k, j = i - 1, 0
+        while i > k:
+            if i % 2 == 0:
+                i //= 2
+                j += 1
+            else:
+                i = (3*i + 1)//2
+                j += 2
+        j += cached_lengths[i - 1]
+        cached_lengths.append(j)
+    a = max(cached_lengths)
+    b = cached_lengths.index(a) + 1
+    return a, b
+
+def lattice(n):
+    """Return the number of ways one can move through an n x n grid.
+    
+    The only "legal" moves are those that move right or down, begin
+    at the top left corner and end in the bottom right corner.
+    
+    >>> lattice(3)
+    20
+    """
+    a = []
+    b = [1]
+    for i in range(2, n + 1):
+        for j in range(1, i):
+            a.append(sum(b[:j]))
+        a.append(2*sum(b))
+        b = a
+        a = []
+    return 2*sum(b)

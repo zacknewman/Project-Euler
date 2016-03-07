@@ -151,3 +151,14 @@ list = [37107287533902102798797998220837590246510135740250, 46376937677490009712
 
 >>> int(str(sum(list))[:10])
 5537376230
+
+Problem 14.
+Which starting number, under one million, produces the longest Collatz chain?
+>>> collatz_max_length(1000000)
+(525, 837799)
+
+Problem 15.
+Starting in the top left corner and ending in the bottom right corner and only moving right or down,
+how many routes are there through a 20×20 grid?
+>>> lattice(20)
+137846528820

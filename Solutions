@@ -161,7 +161,7 @@ Which starting number, under one million, produces the longest Collatz chain?
 Problem 15.
 Starting in the top left corner and ending in the bottom right corner and only moving right or down,
 how many routes are there through a 20×20 grid?
->>> lattice(20)
+>>> combination(40, 20)
 137846528820
 
 Problem 16.

@@ -206,7 +206,7 @@ highlyCompositeNumber n
 -- with at least an integer-number of factors. It first invokes the
 -- "highlyCompositeNumber" function in order to bypass testing too-small
 -- numbers.
-triangularNumberFactors :: Integer -> Integer
+triangularNumberFactors  :: Integer -> Integer
 triangularNumberFactors n = h $ head $ filter (\ (_, y) -> y > n) $ zip [i..] $
                             map g $ map f $ zipWith (++) xs $ tail xs
     where (i, xs, f, g, h) = (ceiling (((sqrt (fromInteger (1 + 8 *
@@ -215,3 +215,30 @@ triangularNumberFactors n = h $ head $ filter (\ (_, y) -> y > n) $ zip [i..] $
                               sort ys, \ xss -> if xss == [] then 1 else
                               toInteger (length (head xss) + 1) * g (tail xss),
                               \ (a, _) -> a * (a + 1) `div` 2)
+
+-- |The collatzMaxLength function return the integer with the maximum Collatz
+-- sequence length. While the Collatz conjecture hasn't been proven to be true,
+-- no counterexample has been found either. Therefore one can "safely"
+-- assume this function will always produce a value. Since a list of Collatz
+-- lengths will be created for every integer < n, time and memory will be an
+-- issue for larger inputs. This function repeatedly composes the Collatz
+-- function on itself until a value of 1 is reached for every number less than
+-- n. A list containing the most compositions and the responsible value is
+-- returned. To speed up this function, an array should be used; however
+-- if one compiles the main module using the "O2" flag, then the time isn't
+-- that much greater.
+collatzMaxLength  :: Integer -> [Integer]
+collatzMaxLength n = maximum [collatz i | i <- [1..n - 1]]
+    where collatz 1 = [1, 1]
+          collatz m
+            | even m    = [1 + head (collatz (m `div` 2)), m]
+            | otherwise = [2 + head (collatz ((3 * m + 1) `div` 2)), m]
+
+-- |The factorial function returns the factorial of a non-negative integer.
+factorial  :: Integer -> Integer
+factorial n = product [1..n]
+
+-- |The combination function returns the number of k-length subsets of an
+-- n-length set.
+combination    :: Integer -> Integer -> Integer
+combination n k = product [n - k + 1..n] `div` product [1..k]

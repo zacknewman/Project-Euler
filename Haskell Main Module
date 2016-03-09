@@ -24,4 +24,4 @@ main  = do print ((sumConsecNumbers 3 ((999 `div` 3)::Integer) 3 +
            print (sum ([90 * length xs | xs <- listOf1to9] ++ [10 * length ys | ys <-
                   listOf10to19] ++ [100 * length zs | zs <- listOf2030To90] ++ [length rs | rs <-
                   listOf100200To1000] ++ [99 * length ts | ts <- listOf100And200AndTo900And]))
-
+           print (maxTrianglePath (triangularGrid::[[Integer]]))

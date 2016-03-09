@@ -487,3 +487,21 @@ def combination(n, k):
     6
     """
     return product(range(n - k + 1, n + 1))//product(range(1, k + 1))
+
+def max_triangle_sum_path(rows):
+    """Return the maximum sum of all paths of a triangular grid.
+    
+    The triangular grid must be entered as a list of lists. The list
+    elements are the rows of the triangle where each subsequent row
+    has one more number than the previous. The only "legal" paths
+    are those that travel from the top to the bottom by moving to
+    adjacent numbers on the row below.
+    
+    >>> max_triangle_sum_path([[3], [7, 4], [2, 4, 6], [8, 5, 9, 3]])
+    23
+    """
+    l = len(rows) - 2
+    for i in range(l, -1, -1):
+        for j, k in enumerate(rows[i]):
+            rows[i][j] = k + max(rows[i + 1][j], rows[i + 1][j + 1])
+    return rows[0].pop()

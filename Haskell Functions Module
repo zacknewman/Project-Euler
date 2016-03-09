@@ -242,3 +242,17 @@ factorial n = product [1..n]
 -- n-length set.
 combination    :: Integer -> Integer -> Integer
 combination n k = product [n - k + 1..n] `div` product [1..k]
+
+-- |The maxTrianglePath function returns the maximum sum of all paths in
+-- a triangular grid. The grid must be entered as a list of lists where
+-- the first list contains one number, the second list contains two numbers,
+-- etc. The only paths considered are those that start from the top (first list)
+-- and move to an adjacent number in the next row (i.e., an element in the next
+-- list with the same or 1-higher index).
+maxTrianglePath      :: (Num a, Ord a) => [[a]] -> a
+maxTrianglePath xss
+    | length xss == 1 = head $ head xss
+    | otherwise       = maxTrianglePath (init (init xss) ++ [zipWith (+) (last $ init xss) (f $ last xss)])
+        where f []       = []
+              f [x]      = [x]
+              f (x:y:xs) = if x >= y then x:f (y:xs) else y:f (y:xs)

@@ -36,8 +36,7 @@ fibAll  = 0:1:zipWith (+) fibAll (tail fibAll)
 factorization  :: Integer -> [Integer]
 factorization 1 = []
 factorization n = p:factorization (n `div` p)
-    where (m, p) = (round $ sqrt (fromInteger n::Double), head $ filter (\ x ->
-                    n `mod` x == 0) ((2:3:[5,11..m]) ++ [7,13..m] ++ [n]))
+    where (m, p) = (round (sqrt (fromInteger n)::Double), head $ filter (\ x -> n `mod` x == 0) ((2:3:[5,11..m]) ++ [7,13..m] ++ [n]))
 
 -- |The toDigits function maps a non-negative integer to the list of the
 -- integer's digit(s).
@@ -156,10 +155,10 @@ diagonalProductMax k xss = maximum [d1, d2, d3, d4]
                                                 reverse xs, columnProductMax, \
                                                 yss -> zip yss [0..length (xss
                                                 !! 0) - 1], \ yss -> transpose $
-                                                drop 1 yss, f3 k $ map f $ f4
-                                                xss, f3 k $ map f $ f4 $ map f2
-                                                xss, f3 k $ map f $ f4 $ f5 xss,
-                                                f3 k $ map f $ f4 $ f5 $ map f2
+                                                drop 1 yss, f3 k . map f $ f4
+                                                xss, f3 k . map f . f4 $ map f2
+                                                xss, f3 k . map f . f4 $ f5 xss,
+                                                f3 k . map f . f4 . f5 $ map f2
                                                 xss)
 
 -- |The gridProductMax function returns the largest product of k adjacent
@@ -216,7 +215,7 @@ triangularNumberFactors n = h $ head $ filter (\ (_, y) -> y > n) $ zip [i..] $
                               toInteger (length (head xss) + 1) * g (tail xss),
                               \ (a, _) -> a * (a + 1) `div` 2)
 
--- |The collatzMaxLength function return the integer with the maximum Collatz
+-- |The collatzMaxLength function returns the integer with the maximum Collatz
 -- sequence length. While the Collatz conjecture hasn't been proven to be true,
 -- no counterexample has been found either. Therefore one can "safely"
 -- assume this function will always produce a value. Since a list of Collatz
@@ -256,3 +255,17 @@ maxTrianglePath xss
         where f []       = []
               f [x]      = [x]
               f (x:y:xs) = if x >= y then x:f (y:xs) else y:f (y:xs)
+
+-- |The sundaysFirstOfMonth function returns the number of times Sunday is the
+-- is the firt of a month from January 1st 1901 to December 31st of the desired
+-- ending year. The desired ending year can't go beyond 2099. The first input
+-- must be 0 and the second input must be 1901
+sundaysFirstOfMonth :: Int -> Int -> Int -> Int
+sundaysFirstOfMonth d y y2
+    | y == (y2 + 1)  = 0
+    | y `mod` 4 == 1 = length (filter (\ i -> i `mod` 7 == b) ys) + sundaysFirstOfMonth b (y + 1) y2
+    | otherwise      = length (filter (\ i -> i `mod` 7 == a) xs) + sundaysFirstOfMonth a (y + 1) y2
+        where xs = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+              ys = zipWith (+) xs (0:0:[1,1..])
+              a  = (d - 1) `mod` 7
+              b  = (d - 2) `mod` 7

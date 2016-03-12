@@ -212,3 +212,26 @@ Problem 21.
 Evaluate the sum of all the amicable numbers under 10000.
 >>> sum([sum(i) for i in amicable_numbers(9999)])
 31626
+
+Problem 22.
+Sort the text file, "names.txt," into alphabetical order. Then working out the alphabetical value for each name,
+multiply this value by its alphabetical position in the list to obtain a name score.
+What is the total of all the name scores in the file?
+>>> letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+               "V", "W", "X", "Y", "Z"]
+>>> letter_points = dict(zip(letters, range(1,27)))
+>>> summands = []
+>>> f = open("names.txt", "r")
+>>> names = f.read()
+>>> f.close()
+>>> names = names.replace('"', '')
+>>> names = names.split(",")
+>>> names.sort()
+>>> for i, j in enumerate(names, start=1):
+...     m = 0
+...     for k in j:
+...         m += letter_points[k]
+...     n = i * m
+...     summands.append(n)
+>>> sum(summands)
+871198282

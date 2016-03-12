@@ -235,3 +235,12 @@ What is the total of all the name scores in the file?
 ...     summands.append(n)
 >>> sum(summands)
 871198282
+
+Problem 23.
+Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
+>>> abun = abundant_numbers(28123)
+>>> abun_sums = [x + y for x in abun for y in abun if x + y <= 28123]
+>>> sums = set(abun_sums)
+>>> total = range(1, 28124)
+>>> sum(total) - sum(sums)
+4179871

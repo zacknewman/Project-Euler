@@ -507,21 +507,20 @@ def max_triangle_sum_path(rows):
     return rows[0].pop()
 
 def factors(n):
-    """Return the list of all factors of n.
+    """Return an unordered set of all factors of n.
     
     >>> factors(10)
-    [1, 2, 5, 10]
+    {1, 2, 10, 5}
     """
     if n == 1:
-        return [1]
+        return {1}
     else:
         primes = factorization(n)
         seq = []
         for i in range(len(primes) + 1):
             for j in combinations(primes, i):
                 seq.append(product(j))
-        divisors = list(set(seq))
-        divisors.sort()
+        divisors = set(seq)
         return divisors
 
 def amicable_numbers(n):
@@ -532,7 +531,6 @@ def amicable_numbers(n):
     >>> amicable_numbers(500)
     [(220, 284)]
     """
-    
     divisors = [sum(factors(i)) - i for i in range(1, n + 1)]
     dupes = (filter(lambda x: x[1] <= n and x[0] == divisors[x[1] - 1] and x[0]
              != x[1], enumerate(divisors, start=1)))
@@ -543,3 +541,11 @@ def amicable_numbers(n):
         else:
             pairs.append((a, b))
     return pairs
+
+def abundant_numbers(n):
+    """Return an iterable containing all abundant numbers <= n.
+    
+    >>> list(abundant_numbers(30))
+    [12, 18, 20, 24, 30]
+    """
+    return [x for x in range(1, n + 1) if sum(factors(x)) - x > x]

@@ -257,6 +257,6 @@ What is the index of the first term in the Fibonacci sequence to contain 1000 di
 ...     a = fib_number(i)
 ...     i += 1
 ...     if a >= 10**(999):
-...             break
+...        break
 >>> i - 1
 4782

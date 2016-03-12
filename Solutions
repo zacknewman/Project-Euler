@@ -200,7 +200,6 @@ How many Sundays fell on the first of the month during the twentieth century (1 
 ...               for k in normal:
 ...                        if k % 7 == j:
 ...                                total += 1
-...
 >>> total
 171
 
@@ -234,7 +233,6 @@ What is the total of all the name scores in the file?
 ...         m += letter_points[k]
 ...     n = i * m
 ...     summands.append(n)
-...
 >>> sum(summands)
 871198282
 
@@ -259,9 +257,6 @@ What is the index of the first term in the Fibonacci sequence to contain 1000 di
 ...     a = fib_number(i)
 ...     i += 1
 ...     if a >= 10**(999):
-...     
-	
 ...             break
-...
 >>> i - 1
 4782

@@ -252,11 +252,6 @@ What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 
 
 Problem 25.
 What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
->>> i = 0
->>> while True:
-...     a = fib_number(i)
-...     i += 1
-...     if a >= 10**(999):
-...        break
->>> i - 1
+>>> a = sqrt(5)
+>>> round((log(a) + 999*log(10))/log((1 + a)/2))
 4782

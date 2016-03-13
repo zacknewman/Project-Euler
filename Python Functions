@@ -556,9 +556,5 @@ def fib_number(n):
     >>> fib_number(9)
     34
     """
-    a, b = 0, 1
-    j = 1
-    while j <= n:
-        a, b = b, a + b
-        j += 1
-    return a
+    a = sqrt(5)
+    return round((((1 + a)/2)**n - ((1 - a)/2)**n)/a)

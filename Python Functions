@@ -550,11 +550,25 @@ def abundant_numbers(n):
     """
     return [x for x in range(1, n + 1) if sum(factors(x)) - x > x]
 
-def fib_number(n):
-    """Return the nth Fibonacci number (indexed from 0)
+def lexicographic_permutation(n, elements, nums=[]):
+    """Return the lexicographic permutation of a list of integers.
     
-    >>> fib_number(9)
-    34
+    >>> lexicographic_permutation(5, [2,4,1,9])
+    1924
     """
-    a = sqrt(5)
-    return round((((1 + a)/2)**n - ((1 - a)/2)**n)/a)
+    elements.sort()
+    l = len(elements) - 1
+    a = factorial(l)
+    m, r = divmod(n, a)
+    if r == 0:
+        nums.append(elements[(m - 1)])
+        elements.pop(m - 1)
+        elements.reverse()
+        nums = nums + elements
+        perm = int(reduce(lambda x, y: x + y, map(lambda x: str(x), nums)))
+        return perm
+    else:
+        nums.append(elements[m])
+        elements.pop(m)
+        dif = n - m*a
+        return lexicographic_permutation(dif, elements, nums)

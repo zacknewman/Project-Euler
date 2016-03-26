@@ -5,25 +5,23 @@ main :: IO()
 main  = do print ((sumConsecNumbers 3 ((999 `div` 3)::Integer) 3 +
                   sumConsecNumbers 5 ((999 `div` 5)::Integer) 5 -
                   sumConsecNumbers 15 ((999 `div` 15)::Integer) 15)::Double)
-           print (sum . filter even $ takeWhile (<= 4000000) fibAll)
-           print (last $ factorization 600851475143)
-           print (palindromeProduct 3)
-           print (smallestMultiple 20)
+           print . sum . filter even $ takeWhile (<= 4000000) fibAll
+           print . last $ factorization 600851475143
+           print $ palindromeProduct 3
+           print $ smallestMultiple 20
            print ((sumConsecNumbers 1 (100::Integer) 1 ^ (2::Integer) -
                   sumConsecSquares 1 (100::Integer) 1)::Double)
-           print (allPrimes !! 10000)
-           print (digitProduct 13 1000-digitNumber)
-           print (maybe 0 product $ pythagoreanTripleBoundSum (1000::Integer))
-           print (sum $ listPrimes 2000000)
-           print (gridProductMax 4 (20x20Grid::[[Integer]]))
-           print (triangularNumberFactors 500)
-           print (take 10 . toDigits $ sum listOf50DigitNumbers)
-           print (collatzMaxLength 1000000)
-           print (combination 40 20)
-           print (sum $ toDigits (2 ^ (1000::Integer)))
-           print (sum ([90 * length xs | xs <- listOf1to9] ++ [10 * length ys | ys <-
-                  listOf10to19] ++ [100 * length zs | zs <- listOf2030To90] ++ [length rs | rs <-
-                  listOf100200To1000] ++ [99 * length ts | ts <- listOf100And200AndTo900And]))
-           print (maxTrianglePath (triangularGrid::[[Integer]]))
-           print (sundaysFirstOfMonth 0 1901 2000)
-           print (sum . toDigits $ factorial 100)
+           print $ allPrimes !! 10000
+           print $ digitProduct 3 123456
+           print . maybe 0 product $ pythagoreanTripleBoundSum (1000::Integer)
+           print . sum $ listPrimes 2000000
+           print $ gridProductMax 2 ([[1,2,3],[4,5,6],[7,8,9]]::[[Integer]])
+           print $ triangularNumberFactors 500
+           print . take 10 . toDigits $ sum [1234567890, 1234567890]
+           print $ collatzMaxLength 1000000
+           print $ combination 40 20
+           print . sum $ toDigits (2 ^ (1000::Integer))
+           print $ maxTrianglePath ([[1], [1, 2]]::[[Integer]])
+           print $ sundaysFirstOfMonth 0 1901 2000
+           print . sum . toDigits $ factorial 100
+           print . sum . map (\ (a, b) -> a + b) $ amicablePairs 9999

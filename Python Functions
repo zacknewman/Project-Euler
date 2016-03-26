@@ -51,14 +51,13 @@ def fib(n):
         a, b = b, a + b
         yield a
 
+# This function is a rather simple implementation that can be
+# greatly improved (e.g., general number field sieve); consequently
+# this function may take a long time to compute if the number exceeds 20 digits.
+# In the case of very large integers one must employ sieve theory
+# techniques.
 def factorization(n):
     """Return a list of the prime factorization of n.
-    
-    This function is a rather simple implementation that can be
-    greatly improved (e.g., general number field sieve); consequently
-    this function may take a long time to compute if the number exceeds 20 digits.
-    In the case of very large integers one must employ sieve theory
-    techniques.
     
     >>> factorization(24)
     [2, 2, 2, 3]
@@ -125,13 +124,12 @@ def palindrome_product(digits):
                 continue
     return prod
 
+# This is a very simple function; consequently it may take a
+# long time to compute if the number exceeds 20 digits.
+# In the case of very large integers one must employ sieve theory
+# techniques.
 def prime(n):
     """Test if n is a prime number.
-    
-    This is a very simple function; consequently it may take a
-    long time to compute if the number exceeds 20 digits.
-    In the case of very large integers one must employ sieve theory
-    techniques.
     
     >>> prime(19)
     True
@@ -142,14 +140,13 @@ def prime(n):
         return False
     else:
         j = int(sqrt(n)) + 1
-        for i in range(5, j, 6):
-            if n % i == 0:
+        p, q = 5, 7
+        while p < j:
+            if n % p == 0 or n % q == 0:
                 return False
-        for i in range(7, j, 6):
-            if n % i == 0:
-                return False
-        else:
-            return True
+            else:
+                p, q = p + 6, q + 6
+        return True
 
 def prime_generator(n):
     """Generate all unsorted primes <= n.
@@ -213,12 +210,10 @@ def sum_consec_squares(start, quantity=None, step=1):
         return ((n + 1)*start*start + (n*n + n)*start*step + ((2*n**3 + 3*n*n +
                 n)*step*step)/6)
 
+# This function takes some time to run, so integers larger than 1000000
+# shouldn't be used.
 def prime_number(n):
     """Return the nth prime number (indexed from 0).
-    
-    The function returns the nth prime integer (indexed from 0).
-    The function takes some time to run, so integers larger than 1000000
-    shouldn't be used.
     
     >>> prime_number(3)
     7
@@ -345,21 +340,21 @@ def grid_product(rows: [float], k: int) -> float:
             products.append(product(j[l : l + k]))
     return max(products)
     
+    
+# This function is really only useful in that it is used recursively by
+# another function "highly_composite_number" to calculate the highly composite
+# numbers. This function's sole purpose is to create all potential highly
+# composite numbers with at least an inputted number of divisors (the
+# "divisors" parameter). The primes parameter is the list of primes that
+# will be used to construct the list of potential numbers.The lower and
+# upper parameters are the lower and upper bounds of the exponent for 2
+# respectively. The length parameter is the number of unique primes in
+# the potential highly composite number. This function employs known facts
+# about the necessary forms of highly composite numbers most famously proven
+# by Srinivasa Ramanujan.
 def potential_highly_composite(primes, lower, upper, divisors, length,
                                exponents=[], depth=0):
     """Return all potential highly composite numbers bounded by length.
-    
-    The function is really only useful in that it is used recursively by
-    another function "highly_composite_number" to calculate the highly composite
-    numbers. This function's sole purpose is to create all potential highly
-    composite numbers with at least an inputted number of divisors (the
-    "divisors" parameter). The primes parameter is the list of primes that
-    will be used to construct the list of potential numbers.The lower and
-    upper parameters are the lower and upper bounds of the exponent for 2
-    respectively. The length parameter is the number of unique primes in
-    the potential highly composite number. This function employs known facts
-    about the necessary forms of highly composite numbers most famously proven
-    by Srinivasa Ramanujan.
     
     >>> potential_highly_composite([2,3,5,7,11], 1, 3, 6, 2)
     [30, 60, 180, 120, 360, 1080]
@@ -369,7 +364,7 @@ def potential_highly_composite(primes, lower, upper, divisors, length,
         exponents.append(1)
         mult = reduce(lambda x, y: x*(y + 1), exponents, 1)
         if mult >= divisors:
-            prim = zip(primes[:-1],exponents)
+            prim = zip(primes[:-1], exponents)
             val = list(starmap(pow, prim))
             hcn = product(val)
             potential.append(hcn)
@@ -414,12 +409,11 @@ def highly_composite_number(n):
                 potential2.append(min(i))
         return min(potential2)
 
+# This function first uses the "highly_composite_number" function
+# to determine the minimum possible size of the triangular number
+# before looping to find the result.
 def triangular_number_factors(n):
     """Return the first triangular number that has more than n factors.
-    
-    The function first uses the "highly_composite_number" function
-    to determine the minimum possible size of the triangular number
-    before looping to find the result.
     
     >>> triangular_number_factors(10)
     120
@@ -441,17 +435,16 @@ def triangular_number_factors(n):
         else:
             start += 1
 
+# While the Collatz conjecture hasn't been proven to be true, no
+# counterexample has been found either. Therefore one can "safely"
+# assume this function will always produce a value. Because this function
+# caches the lengths of each value, memory will become an issue for larger
+# inputs as will the time it takes to complete. This function repeatedly
+# composes the Collatz function on itself until a value of 1 is reached for
+# every number less than n. A tuple containing the most compositions and
+# the responsible value is returned.
 def collatz_max_length(n):
     """Return the integer with the maximum Collatz sequence length.
-    
-    While the Collatz conjecture hasn't been proven to be true, no
-    counterexample has been found either. Therefore one can "safely"
-    assume this function will always produce a value. Because this function
-    caches the lengths of each value, memory will become an issue for larger
-    inputs as will the time it takes to complete. This function repeatedly
-    composes the Collatz function on itself until a value of 1 is reached for
-    every number less than n. A tuple containing the most compositions and
-    the responsible value is returned.
     
     >>> collatz_max_length(13)
     (20, 9)
@@ -504,7 +497,7 @@ def max_triangle_sum_path(rows):
     for i in range(l, -1, -1):
         for j, k in enumerate(rows[i]):
             rows[i][j] = k + max(rows[i + 1][j], rows[i + 1][j + 1])
-    return rows[0].pop()
+    return rows[0].pop()    
 
 def factors(n):
     """Return an unordered set of all factors of n.

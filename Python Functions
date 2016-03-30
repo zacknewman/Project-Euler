@@ -41,7 +41,7 @@ def sum_consec_numbers(start, quantity=None, step=1):
         return (n + 1)*start + ((n*n + n)*step)/2
     
 def fib(n):
-    """Generate all Fibonacci number > 0 and <= n.
+    """Generate all Fibonacci numbers > 0 and <= n.
     
     >>> list(fib(10))
     [1, 1, 2, 3, 5, 8]

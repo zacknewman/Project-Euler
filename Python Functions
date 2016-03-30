@@ -63,8 +63,7 @@ def factorization(n):
     [2, 2, 2, 3]
     """
     primes = []
-    p = 5
-    q = 7
+    p, q = 5, 7
     while n % 2 == 0:
         primes.append(2)
         n //= 2
@@ -78,9 +77,8 @@ def factorization(n):
         while n % q == 0:
             primes.append(q)
             n //= q
-        p += 6
-        q += 6
-        if (p*p > n) and (n > 1):
+        p, q = p + 6, q + 6
+        if p*p > n > 1:
             primes.append(n)
             break
     return primes
@@ -223,16 +221,13 @@ def prime_number(n):
     elif n == 1:
         return 3
     else:
-        p = 5
-        q = 7
-        i = 1
+        p, q, i = 5, 7, 1
         while i < n:
             if prime(p):
                 i += 1
             if prime(q):
                 i += 1   
-            p += 6
-            q += 6
+            p, q = p + 6, q + 6
         if i == n and prime(q - 6):
             return q - 6
         else:
@@ -339,45 +334,14 @@ def grid_product(rows: [float], k: int) -> float:
         for l in range(n - k - i):
             products.append(product(j[l : l + k]))
     return max(products)
-    
-    
-# This function is really only useful in that it is used recursively by
-# another function "highly_composite_number" to calculate the highly composite
-# numbers. This function's sole purpose is to create all potential highly
-# composite numbers with at least an inputted number of divisors (the
-# "divisors" parameter). The primes parameter is the list of primes that
-# will be used to construct the list of potential numbers.The lower and
-# upper parameters are the lower and upper bounds of the exponent for 2
-# respectively. The length parameter is the number of unique primes in
-# the potential highly composite number. This function employs known facts
-# about the necessary forms of highly composite numbers most famously proven
-# by Srinivasa Ramanujan.
-def potential_highly_composite(primes, lower, upper, divisors, length,
-                               exponents=[], depth=0):
-    """Return all potential highly composite numbers bounded by length.
-    
-    >>> potential_highly_composite([2,3,5,7,11], 1, 3, 6, 2)
-    [30, 60, 180, 120, 360, 1080]
-    """
-    potential = []
-    if depth == length:
-        exponents.append(1)
-        mult = reduce(lambda x, y: x*(y + 1), exponents, 1)
-        if mult >= divisors:
-            prim = zip(primes[:-1], exponents)
-            val = list(starmap(pow, prim))
-            hcn = product(val)
-            potential.append(hcn)
-    else:
-        for i in range(lower, upper + 1):
-            lower = floor(log(primes[length])/log(primes[depth + 1]))
-            upper = min(i, 2*ceil(log(primes[length + 1])/log(primes[depth +
-                        1])) - 1)
-            new_exponents = exponents + [i]
-            potential.extend(potential_highly_composite(primes, lower, upper,
-                             divisors, length, exponents=new_exponents, depth=depth+1))
-    return potential
 
+# This function uses an internal function, "potential_highly_composite,"
+# that recursively creates all potential highly composite numbers with at least
+# n divisors. The lower and upper parameters of this function are the lower and
+# upper bounds of the exponents, respectively. The length parameter is the
+# number of unique primes in the potential highly composite number. This
+# function employs known facts about the necessary forms of highly composite
+# numbers most famously proven by Srinivasa Ramanujan.
 def highly_composite_number(n):
     """Return the minimum highly composite number with at least n divisors.
     
@@ -397,11 +361,30 @@ def highly_composite_number(n):
         primes = list(map(prime_number, range(m + 1)))
         potential = []
         potential2 = []
+        def potential_highly_composite(lower, upper, length, exponents=[],
+                                       depth=0):
+            potential3 = []
+            if depth == length:
+                exponents.append(1)
+                mult = reduce(lambda x, y: x*(y + 1), exponents, 1)
+                if mult >= n:
+                    prim = zip(primes[:-1], exponents)
+                    hcn = product(starmap(pow, prim))
+                    potential3.append(hcn)
+            else:
+                for i in range(lower, upper + 1):
+                    lower = floor(log(primes[length])/log(primes[depth + 1]))
+                    upper = min(i, 2*ceil(log(primes[length +
+                                1])/log(primes[depth + 1])) - 1)
+                    new_exponents = exponents + [i]
+                    potential3.extend(potential_highly_composite(lower, upper,
+                                      length, new_exponents, depth+1))
+            return potential3
         for i in range(1, m):
             l = floor(log(primes[i])/log(2))
             u = 2*ceil(log(primes[i + 1])/log(2)) - 1
-            hcn = potential_highly_composite(primes, l, u, n, i)
-            potential.append(hcn)
+            hcns = potential_highly_composite(l, u, i)
+            potential.append(hcns)
         for i in potential:
             if i == []:
                 continue
